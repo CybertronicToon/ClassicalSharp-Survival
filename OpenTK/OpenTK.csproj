@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="2.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{35FEE071-2DE6-48A1-9343-B5C1F202A12B}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>OpenTK</RootNamespace>
+    <AssemblyName>OpenTK</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <BaseAddress>4194304</BaseAddress>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <OutputPath>..\output\debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\output\release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BindingsBase.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="DisplayDevice.cs" />
+    <Compile Include="FrameEventArgs.cs" />
+    <Compile Include="GameWindow.cs" />
+    <Compile Include="Graphics\OpenGL\GL.cs" />
+    <Compile Include="IGameWindow.cs" />
+    <Compile Include="INativeWindow.cs" />
+    <Compile Include="Interop.cs" />
+    <Compile Include="KeyPressEventArgs.cs" />
+    <Compile Include="Math\MathHelper.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="MemUtils.cs" />
+    <Compile Include="NativeWindow.cs" />
+    <Compile Include="Graphics\ColorFormat.cs" />
+    <Compile Include="Graphics\GraphicsContextBase.cs" />
+    <Compile Include="Graphics\GraphicsContextException.cs" />
+    <Compile Include="Graphics\GraphicsMode.cs" />
+    <Compile Include="Graphics\GraphicsModeException.cs" />
+    <Compile Include="Graphics\IGraphicsContext.cs" />
+    <Compile Include="Graphics\OpenGL\GLEnums.cs" />
+    <Compile Include="Graphics\OpenGL\GLHelper.cs" />
+    <Compile Include="Input\Key.cs" />
+    <Compile Include="Input\KeyboardDevice.cs" />
+    <Compile Include="Input\MouseButton.cs" />
+    <Compile Include="Input\MouseDevice.cs" />
+    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Platform\Configuration.cs" />
+    <Compile Include="Platform\IPlatformFactory.cs" />
+    <Compile Include="Platform\IWindowInfo.cs" />
+    <Compile Include="Platform\MacOS\AglContext.cs" />
+    <Compile Include="Platform\MacOS\Application.cs" />
+    <Compile Include="Platform\MacOS\CarbonBindings\Agl.cs" />
+    <Compile Include="Platform\MacOS\CarbonBindings\CarbonAPI.cs" />
+    <Compile Include="Platform\MacOS\CarbonBindings\CoreFoundation.cs" />
+    <Compile Include="Platform\MacOS\CarbonBindings\MacOSKeys.cs" />
+    <Compile Include="Platform\MacOS\CarbonBindings\QuartzDisplayServicesAPI.cs" />
+    <Compile Include="Platform\MacOS\CarbonGLNative.cs" />
+    <Compile Include="Platform\MacOS\CarbonWindowInfo.cs" />
+    <Compile Include="Platform\MacOS\MacOSException.cs" />
+    <Compile Include="Platform\MacOS\MacOSKeyMap.cs" />
+    <Compile Include="Platform\MacOS\QuartzDisplayDevice.cs" />
+    <Compile Include="Platform\PlatformException.cs" />
+    <Compile Include="Platform\Windows\API.cs" />
+    <Compile Include="Platform\Windows\Wgl.cs" />
+    <Compile Include="Platform\Windows\WinDisplayDevice.cs" />
+    <Compile Include="Platform\Windows\WinGLContext.cs" />
+    <Compile Include="Platform\Windows\WinGLNative.cs" />
+    <Compile Include="Platform\Windows\WinKeyMap.cs" />
+    <Compile Include="Platform\Windows\WinWindowInfo.cs" />
+    <Compile Include="Platform\NullContext.cs" />
+    <Compile Include="Platform\X11\API.cs" />
+    <Compile Include="Platform\X11\Functions.cs" />
+    <Compile Include="Platform\X11\Glx.cs" />
+    <Compile Include="Platform\X11\Structs.cs" />
+    <Compile Include="Platform\X11\X11DisplayDevice.cs" />
+    <Compile Include="Platform\X11\X11GLContext.cs" />
+    <Compile Include="Platform\X11\X11GLNative.cs" />
+    <Compile Include="Platform\X11\X11KeyMap.cs" />
+    <Compile Include="Platform\X11\X11WindowInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharpDX.Direct3D\AdapterDetails.cs" />
+    <Compile Include="SharpDX.Direct3D\Device.cs" />
+    <Compile Include="SharpDX.Direct3D\Direct3D.cs" />
+    <Compile Include="SharpDX.Direct3D\Enumerations.cs" />
+    <Compile Include="SharpDX.Direct3D\PresentParameters.cs" />
+    <Compile Include="SharpDX.Direct3D\Resources.cs" />
+    <Compile Include="SharpDX.Direct3D\Structures.cs" />
+    <Compile Include="SharpDX\ComObject.cs" />
+    <Compile Include="SharpDX\Raw.cs" />
+    <Compile Include="SharpDX\Result.cs" />
+    <Compile Include="WindowState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphics" />
+    <Folder Include="Graphics\OpenGL" />
+    <Folder Include="Input" />
+    <Folder Include="Math" />
+    <Folder Include="Platform" />
+    <Folder Include="Platform\MacOS" />
+    <Folder Include="Platform\MacOS\CarbonBindings" />
+    <Folder Include="Platform\Windows" />
+    <Folder Include="Platform\X11" />
+    <Folder Include="Properties" />
+    <Folder Include="SharpDX" />
+    <Folder Include="SharpDX.Direct3D" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InteropPatcher\InteropPatcher.csproj">
+      <Project>{4A4110EE-21CA-4715-AF67-0C8B7CE0642F}</Project>
+      <Name>InteropPatcher</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <!-- This actually rewrites the calli and fixed code.-->
+  <Target Name="AfterBuild">
+    <Exec Command="$(OutputPath)InteropPatcher.exe $(OutDir)OpenTK.dll" />
+    <!--Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory-->
+    <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" />
+    <!-- Copy back *.pdb from bin/Debug|Release to obj/Debug/Release directory-->
+    <Copy SourceFiles="@(_DebugSymbolsOutputPath)" DestinationFiles="@(_DebugSymbolsIntermediatePath)" SkipUnchangedFiles="true" Condition="'$(_DebugSymbolsProduced)'=='true' and '$(SkipCopyingSymbolsToOutputDirectory)' != 'true'" />
+  </Target>
+</Project>
