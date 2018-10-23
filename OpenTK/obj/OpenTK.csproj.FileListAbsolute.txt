@@ -1,0 +1,6 @@
+C:\Users\Cyber\My SharpDevelop projects\ClassicalSharp-Survival-master\output\debug\OpenTK.dll
+C:\Users\Cyber\My SharpDevelop projects\ClassicalSharp-Survival-master\OpenTK\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Cyber\My SharpDevelop projects\ClassicalSharp-Survival-master\OpenTK\obj\Debug\OpenTK.dll
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\output\debug\OpenTK.dll
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\OpenTK\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\OpenTK\obj\Debug\OpenTK.dll
