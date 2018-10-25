@@ -31,6 +31,7 @@ namespace ClassicalSharp.Gui.Screens {
 			posAtlas.Pack("0123456789", font, "f");
 			table.posAtlas = posAtlas;
 			table.ElementsPerRow = 9;
+			table.CraftingItems = new Item[9];
 			table.Init();
 		}
 		

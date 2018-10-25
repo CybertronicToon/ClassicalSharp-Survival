@@ -15,7 +15,8 @@ namespace ClassicalSharp.Mode {
 		void StopPickingLeft();
 		void PickLeft(BlockID old);
 		void PickMiddle(BlockID old);
-		void PickRight(BlockID old, BlockID block);		
+		void PickRight(BlockID old, BlockID block, BlockID sel);		
+		bool SelRight(BlockID sel);
 		Widget MakeHotbar();
 		void BeginFrame(double delta);
 		void EndFrame(double delta);

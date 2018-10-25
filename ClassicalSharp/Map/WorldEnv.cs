@@ -43,7 +43,7 @@ namespace ClassicalSharp.Map {
 		/// <summary> Colour applied to blocks located in shadow / hidden from direct sunlight. </summary>
 		public FastColour Shadowlight;
 		public int Shadow, ShadowXSide, ShadowZSide, ShadowYBottom;
-		public static readonly FastColour DefaultShadowlight = new FastColour(0x9B, 0x9B, 0x9B);
+		public static readonly FastColour DefaultShadowlight = new FastColour(0x00, 0x00, 0x00);
 		
 		/// <summary> Current weather for this particular map. </summary>
 		public Weather Weather = Weather.Sunny;

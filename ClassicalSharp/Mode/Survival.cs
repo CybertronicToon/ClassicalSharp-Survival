@@ -272,7 +272,8 @@ namespace ClassicalSharp.Mode {
 		
 		public void PickMiddle(BlockID old) { }
 		
-		public void PickRight(BlockID old, BlockID block) {
+		public void PickRight(BlockID old, BlockID block, BlockID sel) {
+			if (SelRight(sel)) return;
 			//int index = game.Inventory.SelectedIndex, offset = game.Inventory.Offset;
 			int index = game.SurvInv.SelectedIndex, offset = 0;
 			//if (invCount[offset + index] == 0) return;
@@ -281,6 +282,14 @@ namespace ClassicalSharp.Mode {
 			game.UpdateBlock(pos.X, pos.Y, pos.Z, block);
 			game.UserEvents.RaiseBlockChanged(pos, old, block);
 			DepleteInventoryHeld();
+		}
+		
+		public bool SelRight(BlockID sel) {
+			/*if (sel == Block.Wood) {
+				game.Gui.SetNewScreen(new SurvivalInventoryScreen(game));
+				return true;
+			}*/
+			return false;
 		}
 		
 		void DepleteInventoryHeld() {
@@ -328,7 +337,7 @@ namespace ClassicalSharp.Mode {
 			if (old == Block.Log) {
 				SpawnItem(Block.Wood, (byte)rnd.Next(3, 6), posVec);
 			} else if (old == Block.CoalOre) {
-				SpawnItem(Block.Slab, (byte)rnd.Next(1, 4), posVec);
+				SpawnItem(Block.Magma, 1, posVec);
 			} else if (old == Block.IronOre) {
 				SpawnItem(Block.Iron, 1, posVec);
 			} else if (old == Block.GoldOre) {

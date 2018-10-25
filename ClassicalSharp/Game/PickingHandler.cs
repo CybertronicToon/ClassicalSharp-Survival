@@ -47,7 +47,15 @@ namespace ClassicalSharp {
 			} else if (right) {
 				if (game.Mode.PickingRight()) return;
 				Vector3I pos = game.SelectedPos.TranslatedPos;
-				if (!game.SelectedPos.Valid || !game.World.IsValidPos(pos)) return;
+				Vector3I pos2 = game.SelectedPos.BlockPos;
+				
+				BlockID sel = Block.Air;
+				if (game.World.IsValidPos(pos2)) sel = game.World.GetBlock(pos2);
+				
+				if (!game.SelectedPos.Valid || !game.World.IsValidPos(pos)) {
+					game.Mode.SelRight(sel);
+					return;
+				}
 				
 				BlockID old = game.World.GetBlock(pos);
 				BlockID block;
@@ -59,12 +67,21 @@ namespace ClassicalSharp {
 				if (game.AutoRotate)
 					block = AutoRotate.RotateBlock(game, block);
 				
-				if (game.CanPick(old) || !BlockInfo.CanPlace[block]) return;
+				if (game.CanPick(old) || !BlockInfo.CanPlace[block]) {
+					game.Mode.SelRight(sel);
+					return;
+				}
 				// air-ish blocks can only replace over other air-ish blocks
-				if (BlockInfo.Draw[block] == DrawType.Gas && BlockInfo.Draw[old] != DrawType.Gas) return;
+				if (BlockInfo.Draw[block] == DrawType.Gas && BlockInfo.Draw[old] != DrawType.Gas) {
+					game.Mode.SelRight(sel);
+					return;
+				}
 				
-				if (!PickingHandler.CheckIsFree(game, block)) return;
-				game.Mode.PickRight(old, block);
+				if (!PickingHandler.CheckIsFree(game, block)) {
+					game.Mode.SelRight(sel);
+					return;
+				}
+				game.Mode.PickRight(old, block, sel);
 			} else if (middle) {
 				Vector3I pos = game.SelectedPos.BlockPos;
 				if (!game.SelectedPos.Valid || !game.World.IsValidPos(pos)) return;

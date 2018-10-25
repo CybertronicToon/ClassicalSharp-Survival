@@ -74,11 +74,13 @@ namespace ClassicalSharp.Mode {
 			inv.Selected = old;
 		}
 		
-		public void PickRight(BlockID old, BlockID block) {
+		public void PickRight(BlockID old, BlockID block, BlockID sel) {
 			Vector3I pos = game.SelectedPos.TranslatedPos;
 			game.UpdateBlock(pos.X, pos.Y, pos.Z, block);
 			game.UserEvents.RaiseBlockChanged(pos, old, block);
 		}
+		
+		public bool SelRight(BlockID sel) { return false; }
 
 		public Widget MakeHotbar() { return new HotbarWidget(game); }		
 		

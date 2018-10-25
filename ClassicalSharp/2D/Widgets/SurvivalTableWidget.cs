@@ -33,7 +33,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		int TableX { get { return X - 5 - 10; } }
 		int TableY { get { return Y - 5 - 30; } }
 		int TableWidth { get { return ElementsPerRow * blockSize + 10 + 20; } }
-		int TableHeight { get { return Math.Min(totalRows + 2, MaxRowsDisplayed) * blockSize + 10 + 40; } }
+		int TableHeight { get { return Math.Min(totalRows + (int)Math.Sqrt(CraftingItems.Length), MaxRowsDisplayed) * blockSize + 10 + 40; } }
 		
 		// These were sourced by taking a screenshot of vanilla
 		// Then using paint to extract the colour components
@@ -310,22 +310,24 @@ namespace ClassicalSharp.Gui.Widgets {
 		
 		bool GetCoords2(int i, out int screenX, out int screenY) {
 			int i2 = i + game.SurvInv.ItemList.Length;
-			int x = (i) % (2), y = (i) / (2);
+			int gridSize = (int)Math.Sqrt(CraftingItems.Length);
+			int x = (i) % (gridSize), y = (i) / (gridSize);
 			screenX = X + blockSize * x;
 			screenY = Y + blockSize * (y + 4) + 3;
 			screenY -= scroll.ScrollY * blockSize;
 			y -= scroll.ScrollY;
-			return y >= 0 && y < MaxRowsDisplayed + 2;
+			return y >= 0 && y < MaxRowsDisplayed + gridSize;
 		}
 		
 		bool GetCoords3(int i, out int screenX, out int screenY) {
 			int i2 = i + game.SurvInv.ItemList.Length;
-			int x = (8) % (9), y = (i) / (2);
+			int gridSize = (int)Math.Sqrt(CraftingItems.Length);
+			int x = (8) % (9), y = (i) / (gridSize);
 			screenX = X + blockSize * x;
 			screenY = Y + (int)(blockSize * (y + 4.5) + 3);
 			screenY -= scroll.ScrollY * blockSize;
 			y -= scroll.ScrollY;
-			return y >= 0 && y < MaxRowsDisplayed + 2;
+			return y >= 0 && y < MaxRowsDisplayed + gridSize;
 		}
 		
 		Point GetMouseCoords(int i) {
@@ -341,7 +343,6 @@ namespace ClassicalSharp.Gui.Widgets {
 		public override void Init() {
 			scroll = new ScrollbarWidget(game);
 			itemList = game.SurvInv.ItemList;
-			CraftingItems = new Item[4];
 			RecreateElements();
 			Reposition();
 			//SetBlockTo(game.Inventory.Selected);
@@ -533,7 +534,6 @@ namespace ClassicalSharp.Gui.Widgets {
 		
 		
 		public override bool HandlesMouseClick(int mouseX, int mouseY, MouseButton button) {
-			if (CraftedItem != null) Console.WriteLine(CraftedItem.id);
 			PendingClose = false;
 			if (button == MouseButton.Right) {
 				if (!CraftingSelected) {
@@ -702,42 +702,137 @@ namespace ClassicalSharp.Gui.Widgets {
 		public void RecalcRecipe() {
 			Recipe[] recipeList = game.RecipeList;
 			Item[] ListOfItems = (Item[])CraftingItems.Clone();
+			BlockID[] BlockList = CraftingList(ListOfItems);
+			BlockID[] BlockList2 = CraftingList2(ListOfItems);
+			BlockID[,] BlockList2D = CraftingDim(BlockList);
 			for (int i = 0; i < ListOfItems.Length; i++) {
 				if (ListOfItems[i] == null) ListOfItems[i] = new Item(0, 0, Block.Air);
 			}
 			for (int i = 0; i < recipeList.Length; i++) {
 				if (recipeList[i].Shapeless == true) {
-					
-				} else {
-					if (recipeList[i].Pattern[0, 0] == ListOfItems[0].id &&
-					    recipeList[i].Pattern[0, 1] == ListOfItems[1].id &&
-					    recipeList[i].Pattern[1, 0] == ListOfItems[2].id &&
-					    recipeList[i].Pattern[1, 1] == ListOfItems[3].id) {
+					if (BlockList2.Length <= 0) continue;
+					BlockID[] RecipeBlocks = new BlockID[recipeList[i].Ingredients.Length];
+					Array.Copy(recipeList[i].Ingredients, RecipeBlocks, recipeList[i].Ingredients.Length);
+					Array.Sort(RecipeBlocks);
+					if (RecipeBlocks.Length != BlockList2.Length) continue;
+					bool recipeMatch = true;
+					for (int x = 0; x < BlockList2.Length; x++) {
+						if (RecipeBlocks[x] != BlockList2[x]) {
+							recipeMatch = false;
+							break;
+						}
+					}
+					if (recipeMatch) {
+						if (BlockList2.Length > 0) Console.WriteLine(BlockList2[0]);
 						CraftedItem = new Item(recipeList[i].Count, 0, recipeList[i].Output);
 						RecipeIndex = i;
 						return;
-					} else {
-						continue;
 					}
+				} else {
+					if (BlockList2D.GetLength(0) != recipeList[i].Pattern.GetLength(0) ||
+					    BlockList2D.GetLength(1) != recipeList[i].Pattern.GetLength(1)) continue;
+					bool isMatch = true;
+					for (int x = 0; x < BlockList2D.GetLength(1); x++)
+						for (int y = 0; y < BlockList2D.GetLength(0); y++) {
+						if (BlockList2D[y, x] != recipeList[i].Pattern[y, x]) isMatch = false;
+					}
+					if (!isMatch) continue;
+					CraftedItem = new Item(recipeList[i].Count, 0, recipeList[i].Output);
+					RecipeIndex = i;
+					return;
 				}
 			}
 			CraftedItem = null;
 			RecipeIndex = -1;
 		}
 		
+		public BlockID[] CraftingList(Item[] items) {
+			BlockID[] BlockList = new BlockID[0];
+			int nextFree = 0;
+			for (int i = 0;  i < items.Length; i++) {
+				Array.Resize(ref BlockList, BlockList.Length + 1);
+				if (CraftingItems[i] == null || CraftingItems[i].id == Block.Air) {
+					BlockList[nextFree] = Block.Air;
+				} else {
+					BlockList[nextFree] = CraftingItems[i].id;
+				}
+				nextFree++;
+			}
+			//Array.Sort(BlockList);
+			return BlockList;
+		}
+		
+		public BlockID[] CraftingList2(Item[] items) {
+			BlockID[] BlockList = new BlockID[0];
+			int nextFree = 0;
+			for (int i = 0;  i < items.Length; i++) {
+				if (CraftingItems[i] == null || CraftingItems[i].id == Block.Air) continue;
+				Array.Resize(ref BlockList, BlockList.Length + 1);
+				BlockList[nextFree] = CraftingItems[i].id;
+				nextFree++;
+			}
+			Array.Sort(BlockList);
+			return BlockList;
+		}
+		
+		public BlockID[,] RecipeDim(Recipe recipe) {
+			/*for (int x = 0; x < recipe.Ingredients.GetLength(0); x++)
+				for (int y = 0; y < recipe.Ingredients.GetLength(*/
+			return new BlockID[0,0];
+		}
+		
+		public BlockID[,] CraftingDim(BlockID[] blocks) {
+			int gridSize = (int)Math.Sqrt(blocks.Length);
+			BlockID[,] blocks2D = make2D(blocks, gridSize, gridSize);
+			int xMin = gridSize - 1;
+			int xMax = 0;
+			int yMin = gridSize - 1;
+			int yMax = 0;
+			bool hasBlocks = false;
+			for (int x = 0; x < gridSize; x++)
+				for (int y = 0; y < gridSize; y++) {
+				if (blocks2D[y, x] != Block.Air) {
+					if (x < xMin) xMin = x;
+					if (x > xMax) xMax = x;
+					if (y < yMin) yMin = y;
+					if (y > yMax) yMax = y;
+					hasBlocks = true;
+				}
+			}
+			if (!hasBlocks) return new BlockID[0, 0];
+			int xSize;
+			if (xMin == xMax) xSize = 1;
+			else xSize = (xMax + 1) - (xMin + 1) + 1;
+			int ySize;
+			if (yMin == yMax) ySize = 1;
+			else ySize = (yMax + 1) - (yMin + 1) + 1;
+			BlockID[,] blocks2D2 = new BlockID[ySize, xSize];
+			for(int x = 0; x < xSize; x++)
+				for (int y = 0; y < ySize; y++) {
+				int x2 = x + xMin;
+				int y2 = y + yMin;
+				blocks2D2[y, x] = blocks2D[y2, x2];
+			}
+			return blocks2D2;
+		}
+		
+		public BlockID[,] make2D(BlockID[] blocks, int width, int height) {
+			BlockID[,] blocks2D = new BlockID[height, width];
+			
+			for (int x = 0; x < width; x++)
+				for (int y = 0; y < height; y++) {
+				blocks2D[y, x] = blocks[y * width + x];
+			}
+			
+			return blocks2D;
+		}
+		
 		public void SubtractRecipe(Recipe recipe) {
-			if (CraftingItems[0] != null) {
-				CraftingItems[0].Count -= 1;
-				if (CraftingItems[0].Count <= 0) CraftingItems[0] = null;
-			} if (CraftingItems[1] != null) {
-				CraftingItems[1].Count -= 1;
-				if (CraftingItems[1].Count <= 0) CraftingItems[1] = null;
-			} if (CraftingItems[2] != null) {
-				CraftingItems[2].Count -= 1;
-				if (CraftingItems[2].Count <= 0) CraftingItems[2] = null;
-			} if (CraftingItems[3] != null) {
-				CraftingItems[3].Count -= 1;
-				if (CraftingItems[3].Count <= 0) CraftingItems[3] = null;
+			for (int i = 0; i < CraftingItems.Length; i++) {
+				if (CraftingItems[i] != null) {
+					CraftingItems[i].Count -= 1;
+					if (CraftingItems[i].Count <= 0) CraftingItems[i] = null;
+				}
 			}
 		}
 		
