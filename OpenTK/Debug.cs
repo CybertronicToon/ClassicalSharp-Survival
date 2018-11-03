@@ -10,8 +10,19 @@ namespace OpenTK {
 			// raised by Mono sometimes when trying to write to console from the finalizer thread.
 		}
 		
+        public static void WriteLine(string message) {
+			try { Console.WriteLine(message); } catch { } 
+		}
+		
+        public static void WriteLine(object obj) {
+			try { Console.WriteLine(obj); } catch { } 
+		}
+		
 		public static void Print(string text, params object[] args) {
 			try { Console.WriteLine(text, args); } catch { }
 		}
+        
+        public static void Indent() { }
+        public static void Unindent() { }
 	}
 }

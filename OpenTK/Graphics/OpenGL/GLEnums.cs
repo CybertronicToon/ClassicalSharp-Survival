@@ -32,6 +32,7 @@ namespace OpenTK.Graphics.OpenGL
 
     public enum ArrayCap : int {
         VertexArray = 0x8074,
+        NormalArray = 0x8075,
         ColorArray = 0x8076,
         TextureCoordArray = 0x8078,
     }
@@ -44,6 +45,25 @@ namespace OpenTK.Graphics.OpenGL
         Triangles = 0x0004,
         TriangleStrip = 0x0005,
         TriangleFan = 0x0006,
+    }
+	
+    public enum BlendEquationMode : int {
+        FuncAdd = ((int)0x8006),
+        Min = ((int)0x8007),
+        Max = ((int)0x8008),
+        FuncSubtract = ((int)0x800A),
+        FuncReverseSubtract = ((int)0x800B),
+    }
+
+    public enum BlendEquationModeExt : int {
+        LogicOp = ((int)0x0BF1),
+        FuncAddExt = ((int)0x8006),
+        MinExt = ((int)0x8007),
+        MaxExt = ((int)0x8008),
+        FuncSubtractExt = ((int)0x800A),
+        FuncReverseSubtractExt = ((int)0x800B),
+        AlphaMinSgix = ((int)0x8320),
+        AlphaMaxSgix = ((int)0x8321),
     }
 
     public enum BlendingFactor : int {
@@ -128,6 +148,16 @@ namespace OpenTK.Graphics.OpenGL
         Dither = 0x0BD0,
         Blend = 0x0BE2,
         Texture2D = 0x0DE1,
+        
+
+        Light0 = 0x4000,
+        Light1 = 0x4001,
+        Light2 = 0x4002,
+        Light3 = 0x4003,
+        Light4 = 0x4004,
+        Light5 = 0x4005,
+        Light6 = 0x4006,
+        Light7 = 0x4007,
 
         VertexArray = 0x8074,
         ColorArray = 0x8076,
@@ -273,11 +303,74 @@ namespace OpenTK.Graphics.OpenGL
         GenerateMipmapHint = 0x8192,
     }
 
+    public enum LightEnvModeSgix : int {
+        Add = ((int)0x0104),
+        Replace = ((int)0x1E01),
+        Modulate = ((int)0x2100),
+    }
+
+    public enum LightEnvParameterSgix : int {
+        LightEnvModeSgix = ((int)0x8407),
+    }
+
+    public enum LightModelColorControl : int {
+        SingleColor = ((int)0x81F9),
+        SeparateSpecularColor = ((int)0x81FA),
+    }
+
+    public enum LightModelParameter : int {
+        LightModelLocalViewer = ((int)0x0B51),
+        LightModelTwoSide = ((int)0x0B52),
+        LightModelAmbient = ((int)0x0B53),
+        LightModelColorControl = ((int)0x81F8),
+    }
+
+    public enum LightName : int {
+        Light0 = ((int)0x4000),
+        Light1 = ((int)0x4001),
+        Light2 = ((int)0x4002),
+        Light3 = ((int)0x4003),
+        Light4 = ((int)0x4004),
+        Light5 = ((int)0x4005),
+        Light6 = ((int)0x4006),
+        Light7 = ((int)0x4007),
+        FragmentLight0Sgix = ((int)0x840C),
+        FragmentLight1Sgix = ((int)0x840D),
+        FragmentLight2Sgix = ((int)0x840E),
+        FragmentLight3Sgix = ((int)0x840F),
+        FragmentLight4Sgix = ((int)0x8410),
+        FragmentLight5Sgix = ((int)0x8411),
+        FragmentLight6Sgix = ((int)0x8412),
+        FragmentLight7Sgix = ((int)0x8413),
+    }
+
+    public enum LightParameter : int {
+        Ambient = ((int)0x1200),
+        Diffuse = ((int)0x1201),
+        Specular = ((int)0x1202),
+        Position = ((int)0x1203),
+        SpotDirection = ((int)0x1204),
+        SpotExponent = ((int)0x1205),
+        SpotCutoff = ((int)0x1206),
+        ConstantAttenuation = ((int)0x1207),
+        LinearAttenuation = ((int)0x1208),
+        QuadraticAttenuation = ((int)0x1209),
+    }
+
     public enum MatrixMode : int {
         Modelview = 0x1700,
         Projection = 0x1701,
         Texture = 0x1702,
         Color = 0x1800,
+    }
+
+    public enum NormalPointerType : int {
+        Byte = ((int)0x1400),
+        Short = ((int)0x1402),
+        Int = ((int)0x1404),
+        Float = ((int)0x1406),
+        Double = ((int)0x140A),
+        HalfFloat = ((int)0x140B),
     }
 
     public enum PixelFormat : int {

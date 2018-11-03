@@ -29,6 +29,9 @@ namespace OpenTK.Graphics.OpenGL {
 			BindBufferAddress = GetAddress( "glBindBuffer" );
 			BindBufferARBAddress = GetAddress( "glBindBufferARB" );
 			BindTextureAddress = GetAddress( "glBindTexture" );
+			BlendColorAddress = GetAddress( "glBlendColor" );
+			BlendEquationAddress = GetAddress( "glBlendEquation" );
+			BlendEquationSeparateAddress = GetAddress( "glBlendEquationSeparate" );
 			BlendFuncAddress = GetAddress( "glBlendFunc" );
 			BlendFuncSeparateAddress = GetAddress( "glBlendFuncSeparate" );
 			BufferDataAddress = GetAddress( "glBufferData" );
@@ -74,6 +77,14 @@ namespace OpenTK.Graphics.OpenGL {
 			GetTexImageAddress = GetAddress( "glGetTexImage" );
 			
 			HintAddress = GetAddress( "glHint" );
+			LightfAddress = GetAddress( "glLightf" );
+			LightfvAddress = GetAddress( "glLightfv" );
+			LightiAddress = GetAddress( "glLighti" );
+			LightivAddress = GetAddress( "glLightiv" );
+			LightModelfAddress = GetAddress( "glLightModelf" );
+			LightModelfvAddress = GetAddress( "glLightModelfv" );
+			LightModeliAddress = GetAddress( "glLightModeli" );
+			LightModelivAddress = GetAddress( "glLightModeliv" );
 			//LineStippleAddress = GetAddress( "glLineStipple" );
 			LineWidthAddress = GetAddress( "glLineWidth" );
 			LoadIdentityAddress = GetAddress( "glLoadIdentity" );
@@ -81,6 +92,10 @@ namespace OpenTK.Graphics.OpenGL {
 			MatrixModeAddress = GetAddress( "glMatrixMode" );
 			MultMatrixfAddress = GetAddress( "glMultMatrixf" );
 			NewListAddress = GetAddress( "glNewList" );
+			
+			Normal3fAddress = GetAddress( "glNormal3f" );
+			Normal3iAddress = GetAddress( "glNormal3i" );
+			NormalPointerAddress = GetAddress( "glNormalPointer" );
 			
 			PopMatrixAddress = GetAddress( "glPopMatrix" );
 			PushMatrixAddress = GetAddress( "glPushMatrix" );

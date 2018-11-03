@@ -52,7 +52,25 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioCapture.cs" />
+    <Compile Include="Audio\AudioContext.cs" />
+    <Compile Include="Audio\AudioContextException.cs" />
+    <Compile Include="Audio\AudioDeviceEnumerator.cs" />
+    <Compile Include="Audio\AudioDeviceErrorChecker.cs" />
+    <Compile Include="Audio\AudioDeviceException.cs" />
+    <Compile Include="Audio\AudioException.cs" />
+    <Compile Include="Audio\AudioValueException.cs" />
+    <Compile Include="Audio\OpenAL\Alc\Alc.cs" />
+    <Compile Include="Audio\OpenAL\Alc\AlcEnums.cs" />
+    <Compile Include="Audio\OpenAL\AL\AL.cs" />
+    <Compile Include="Audio\OpenAL\AL\ALEnums.cs" />
+    <Compile Include="Audio\OpenAL\AL\EffectsExtension.cs" />
+    <Compile Include="Audio\OpenAL\AL\EffectsExtensionEnums.cs" />
+    <Compile Include="Audio\OpenAL\AL\EffectsExtensionPresets.cs" />
+    <Compile Include="Audio\OpenAL\AL\XRamExtension.cs" />
     <Compile Include="BindingsBase.cs" />
+    <Compile Include="BlittableValueType.cs" />
+    <Compile Include="ContextHandle.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="DisplayDevice.cs" />
     <Compile Include="FrameEventArgs.cs" />
@@ -129,6 +147,10 @@
     <Compile Include="WindowState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Audio" />
+    <Folder Include="Audio\OpenAL" />
+    <Folder Include="Audio\OpenAL\AL" />
+    <Folder Include="Audio\OpenAL\Alc" />
     <Folder Include="Graphics" />
     <Folder Include="Graphics\OpenGL" />
     <Folder Include="Input" />

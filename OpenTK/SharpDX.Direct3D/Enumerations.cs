@@ -42,6 +42,9 @@ namespace SharpDX.Direct3D9 {
 		
 		DestinationColor = 9,
 		InverseDestinationColor = 10,
+		
+		BlendFactor = 14,
+		InverseBlendFactor = 15,
 	}
 	
 	[Flags]
@@ -368,8 +371,10 @@ namespace SharpDX.Direct3D9 {
 		ScissorTestEnable = 174,
 		SlopeScaleDepthBias = 175,
 		AntialiasedLineEnable = 176,
+		BlendFactor = 193,
 		SourceBlendAlpha = 207,
 		DestinationBlendAlpha = 208,
+		BlendOperationAlpha = 209,
 	}
 	
 	public enum SamplerState : int {
@@ -473,6 +478,8 @@ namespace SharpDX.Direct3D9 {
 	[Flags]
 	public enum VertexFormat : int {
 		Position = 2,
+		Normal = 16,
+		PositionNormal = 18,
 		Diffuse = 64,
 		Texture0 = 0, // really means '0 texture coordinates'
 		Texture1 = 256, // really means '1 texture coordinate'

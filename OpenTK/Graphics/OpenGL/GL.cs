@@ -20,6 +20,18 @@ namespace OpenTK.Graphics.OpenGL {
 		public static void BindTexture( TextureTarget target, int texture ) {
 			Interop.Calli( (int)target, texture, BindTextureAddress );
 		} static IntPtr BindTextureAddress;
+		
+		public static void BlendColor( float red, float green, float blue, float alpha ) {
+			Interop.Calli( red, green, blue, alpha, BlendColorAddress );
+		} static IntPtr BlendColorAddress;
+		
+		public static void BlendEquation( BlendEquationMode mode ) {
+			Interop.Calli( (int)mode, BlendEquationAddress );
+		} static IntPtr BlendEquationAddress;
+		
+		public static void BlendEquationSeparate( BlendEquationMode modeRGB, BlendEquationMode modeAlpha ) {
+			Interop.Calli( (int)modeRGB, (int)modeAlpha, BlendFuncSeparateAddress );
+		} static IntPtr BlendEquationSeparateAddress;
 
 		public static void BlendFunc( BlendingFactor sfactor, BlendingFactor dfactor ) {
 			Interop.Calli( (int)sfactor, (int)dfactor, BlendFuncAddress );
@@ -165,6 +177,54 @@ namespace OpenTK.Graphics.OpenGL {
 			Interop.Calli( (int)target, (int)mode, HintAddress );
 		} static IntPtr HintAddress;
 		
+		public static void Lightf( LightName light, LightParameter pname, float param) {
+			Interop.Calli( (int)light, (int)pname, param, LightfAddress );
+		} static IntPtr LightfAddress;
+		
+		public static void Lightfv( LightName light, LightParameter pname, float[] @params) {
+			unsafe {
+				fixed (float* @params_ptr = @params) {
+					Interop.Calli( (int)light, (int)pname, @params_ptr, LightfvAddress );
+				}
+			}
+		} static IntPtr LightfvAddress;
+		
+		public static void Lighti( LightName light, LightParameter pname, int param) {
+			Interop.Calli( (int)light, (int)pname, param, LightiAddress );
+		} static IntPtr LightiAddress;
+		
+		public static void Lightiv( LightName light, LightParameter pname, int[] @params) {
+			unsafe {
+				fixed (int* @params_ptr = @params) {
+					Interop.Calli( (int)light, (int)pname, @params_ptr, LightivAddress );
+				}
+			}
+		} static IntPtr LightivAddress;
+		
+		public static void LightModelf( LightModelParameter pname, float param) {
+			Interop.Calli( (int)pname, param, LightModelfAddress );
+		} static IntPtr LightModelfAddress;
+		
+		public static void LightModelfv( LightModelParameter pname, float[] @params) {
+			unsafe {
+				fixed (float* @params_ptr = @params) {
+					Interop.Calli( (int)pname, @params_ptr, LightModelfvAddress );
+				}
+			}
+		} static IntPtr LightModelfvAddress;
+		
+		public static void LightModeli( LightModelParameter pname, int param) {
+			Interop.Calli( (int)pname, param, LightModeliAddress );
+		} static IntPtr LightModeliAddress;
+		
+		public static void LightModeliv( LightModelParameter pname, int[] @params) {
+			unsafe {
+				fixed (int* @params_ptr = @params) {
+					Interop.Calli( (int)pname, @params_ptr, LightModelivAddress );
+				}
+			}
+		} static IntPtr LightModelivAddress;
+		
 		public static void LineWidth(float width) {
 			Interop.Calli( width, LineWidthAddress );
 		} static IntPtr LineWidthAddress;
@@ -188,6 +248,18 @@ namespace OpenTK.Graphics.OpenGL {
 		public static void NewList( int list, int mode ) {
 			Interop.Calli( list, mode, NewListAddress );
 		} static IntPtr NewListAddress;
+		
+		public static void Normal3f(float nx, float ny, float nz) {
+			Interop.Calli( nx, ny, nz, Normal3fAddress );
+		} static IntPtr Normal3fAddress;
+		
+		public static void Normal3i(int nx, int ny, int nz) {
+			Interop.Calli( nx, ny, nz, Normal3iAddress );
+		} static IntPtr Normal3iAddress;
+		
+		public static void NormalPointer(NormalPointerType type, int stride, IntPtr pointer) {
+			Interop.Calli( (int)type, stride, pointer, NormalPointerAddress );
+		} static IntPtr NormalPointerAddress;
 
 		public static void PopMatrix() {
 			Interop.Calli( PopMatrixAddress );
