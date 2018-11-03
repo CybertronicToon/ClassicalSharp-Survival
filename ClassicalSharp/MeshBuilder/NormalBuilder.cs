@@ -139,6 +139,11 @@ namespace ClassicalSharp {
 				int col = fullBright ? FastColour.WhitePacked :
 					X >= offset ? light.LightCol_XSide_Fast(X - offset, Y, Z) : light.OutsideXSide;
 				drawer.Left(leftCount, col, texLoc, part.vertices, ref part.vIndex[Side.Left]);
+				/*drawer.z1 += 1;
+				drawer.z2 += 1;
+				drawer.Left(leftCount, col, texLoc, part.vertices, ref part.vIndex[Side.Left]);
+				drawer.z1 -= 1;
+				drawer.z2 -= 1;*/
 			}
 			
 			if (rightCount != 0) {

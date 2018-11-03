@@ -45,7 +45,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		static FastColour topSelCol2 = new FastColour(155, 155, 155, 142);
 		static FastColour bottomSelCol2 = new FastColour(155, 155, 155, 192);
 		
-		static VertexP3fT2fC4b[] vertices = new VertexP3fT2fC4b[8 * 10 * (4 * 4)];
+		static VertexP3fT2fC4bN1v[] vertices = new VertexP3fT2fC4bN1v[8 * 10 * (4 * 4)];
 		int vb;
 		public override void Render(double delta) {
 			IGraphicsApi gfx = game.Graphics;
@@ -75,7 +75,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				               size, size, topSelCol, bottomSelCol);
 			}
 			gfx.Texturing = true;
-			gfx.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			gfx.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			
 			drawer.BeginBatch(game, vertices, vb);
 			for (int i = 0; i < game.SurvInv.ItemList.Length; i++) {
@@ -198,7 +198,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		}
 		
 		void DrawCounts() {
-			VertexP3fT2fC4b[] vertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v[] vertices = game.ModelCache.vertices;
 			int index = 0;
 			posAtlas.tex.Y = (short)(Y + ((int)(12 * game.GuiInventoryScale)));
 			int xAdj = (int)(14 * game.GuiInventoryScale);
@@ -276,7 +276,7 @@ namespace ClassicalSharp.Gui.Widgets {
 			Point topLeft = game.PointToScreen(Point.Empty);
 			cursorPos.X -= topLeft.X; cursorPos.Y -= topLeft.Y;
 			
-			VertexP3fT2fC4b[] vertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v[] vertices = game.ModelCache.vertices;
 			int index = 0;
 			int yAdj = (int)(9 * game.GuiInventoryScale);
 			posAtlas.tex.Y = (short)(cursorPos.Y - (blockSize / 2) + yAdj);
@@ -357,7 +357,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		
 		public override void Recreate() {
 			Dispose();
-			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4b, vertices.Length);
+			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4bN1v, vertices.Length);
 			RecreateDescTex();
 		}
 		

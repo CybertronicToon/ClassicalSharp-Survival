@@ -27,6 +27,8 @@ namespace ClassicalSharp.Renderers {
 			
 			if (!game.SkyboxRenderer.ShouldRender) {
 				RenderSky(deltaTime);
+				//game.CelestialRenderer.RenderStars(deltaTime);
+				game.CelestialRenderer.Render2(deltaTime);
 				RenderClouds(deltaTime);
 			} else if (game.World.Env.SkyboxClouds) {
 				RenderClouds(deltaTime);

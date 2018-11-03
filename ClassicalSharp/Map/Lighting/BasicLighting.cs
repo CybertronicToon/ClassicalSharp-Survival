@@ -988,6 +988,11 @@ namespace ClassicalSharp.Map {
 			}
 		}
 		
+		public override int GetSunLight(World map)
+		{
+			return ySidesTop[15 - sunLightSub];
+		}
+		
 		
 		public override void Refresh() {
 			for (int i = 0; i < heightmap.Length; i++)

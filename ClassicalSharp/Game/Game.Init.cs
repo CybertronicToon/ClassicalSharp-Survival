@@ -132,6 +132,7 @@ namespace ClassicalSharp {
 			AudioPlayer = new AudioPlayer(); Components.Add(AudioPlayer);
 			AxisLinesRenderer = new AxisLinesRenderer(); Components.Add(AxisLinesRenderer);
 			SkyboxRenderer = new SkyboxRenderer(); Components.Add(SkyboxRenderer);
+			CelestialRenderer = new CelestialRenderer(); Components.Add(CelestialRenderer);
 			
 			PluginLoader.game = this;
 			List<string> nonLoaded = PluginLoader.LoadAll();

@@ -33,6 +33,10 @@ namespace ClassicalSharp.Map {
 		
 		public byte sunLightSub = 0;
 		
+		public virtual int GetSunLight(World map) {
+			return map.Env.Sun;
+		}
+		
 		// Equivalent to
 		// for x = startX; x < startX + 18; x++
 		//    for z = startZ; z < startZ + 18; z++

@@ -37,7 +37,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		static FastColour topSelCol = new FastColour(255, 255, 255, 142);
 		static FastColour bottomSelCol = new FastColour(255, 255, 255, 192);
 		
-		static VertexP3fT2fC4b[] vertices = new VertexP3fT2fC4b[8 * 10 * (4 * 4)];
+		static VertexP3fT2fC4bN1v[] vertices = new VertexP3fT2fC4bN1v[8 * 10 * (4 * 4)];
 		int vb;
 		public override void Render(double delta) {
 			IGraphicsApi gfx = game.Graphics;
@@ -53,7 +53,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				               size, size, topSelCol, bottomSelCol);
 			}
 			gfx.Texturing = true;
-			gfx.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			gfx.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			
 			drawer.BeginBatch(game, vertices, vb);
 			for (int i = 0; i < Elements.Length; i++) {
@@ -115,7 +115,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		
 		public override void Recreate() {
 			Dispose();
-			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4b, vertices.Length);
+			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4bN1v, vertices.Length);
 			RecreateDescTex();
 		}
 		

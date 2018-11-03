@@ -7,3 +7,15 @@ C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\output\d
 C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\ClassicalSharp\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\ClassicalSharp\obj\Debug\ClassicalSharp.exe
 C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-master\ClassicalSharp\obj\Debug\ClassicalSharp.pdb
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\ClassicalSharp\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\ClassicalSharp\obj\Debug\ClassicalSharp.exe
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\output\debug\credits.txt
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\output\debug\readme.md
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\output\debug\SharpWave.dll.config
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\output\debug\ClassicalSharp.exe.config
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\output\debug\ClassicalSharp.exe
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\output\debug\ClassicalSharp.pdb
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\ClassicalSharp\obj\Debug\ClassicalSharp.pdb
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\ClassicalSharp\obj\Debug_D3D\ResolveAssemblyReference.cache
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\ClassicalSharp\obj\Debug_D3D\ClassicalSharp.exe
+C:\Users\Dallas\My SharpDevelop projects\ClassicalSharp-Survival-Vertex-master\ClassicalSharp\obj\Debug_D3D\ClassicalSharp.pdb

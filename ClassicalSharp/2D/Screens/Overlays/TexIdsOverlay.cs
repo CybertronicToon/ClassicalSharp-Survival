@@ -13,13 +13,13 @@ namespace ClassicalSharp.Gui.Screens {
 		TextAtlas idAtlas;
 		public TexIdsOverlay(Game game) : base(game) { }
 		const int verticesCount = TerrainAtlas2D.TilesPerRow * TerrainAtlas2D.RowsCount * 4;
-		static VertexP3fT2fC4b[] vertices;
+		static VertexP3fT2fC4bN1v[] vertices;
 		int dynamicVb;
 		
 		public override void Init() {
 			base.Init();
 			if (vertices == null) {
-				vertices = new VertexP3fT2fC4b[verticesCount];
+				vertices = new VertexP3fT2fC4bN1v[verticesCount];
 			}
 			regularFont.Dispose();
 			regularFont = new Font(game.FontName, 8);
@@ -38,7 +38,7 @@ namespace ClassicalSharp.Gui.Screens {
 		public override void Render(double delta) {
 			RenderMenuBounds();
 			game.Graphics.Texturing = true;
-			game.Graphics.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			game.Graphics.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			RenderWidgets(widgets, delta);
 			RenderTerrain();
 			RenderTextOverlay();
@@ -53,7 +53,7 @@ namespace ClassicalSharp.Gui.Screens {
 		
 		protected override void ContextRecreated() {
 			base.ContextRecreated();
-			dynamicVb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4b, verticesCount);
+			dynamicVb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4bN1v, verticesCount);
 			idAtlas = new TextAtlas(game, 16);
 			idAtlas.Pack("0123456789", regularFont, "f");
 			UpdateTileSize();

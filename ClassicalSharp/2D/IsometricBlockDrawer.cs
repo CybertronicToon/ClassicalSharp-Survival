@@ -13,12 +13,12 @@ namespace ClassicalSharp {
 		Game game;
 		int index;
 		float scale;
-		VertexP3fT2fC4b[] vertices;
+		VertexP3fT2fC4bN1v[] vertices;
 		int vb;
 		
-		CuboidDrawer drawer = new CuboidDrawer();
+		CuboidDrawer2 drawer = new CuboidDrawer2();
 		
-		public void BeginBatch(Game game, VertexP3fT2fC4b[] vertices, int vb) {
+		public void BeginBatch(Game game, VertexP3fT2fC4bN1v[] vertices, int vb) {
 			this.game = game;
 			lastTexIndex = -1;
 			index = 0;
@@ -106,7 +106,7 @@ namespace ClassicalSharp {
 			TextureRec rec = TerrainAtlas1D.GetTexRec(texLoc, 1, out texIndex);
 			if (lastTexIndex != texIndex) Flush();
 			
-			VertexP3fT2fC4b v = default(VertexP3fT2fC4b);
+			VertexP3fT2fC4bN1v v = default(VertexP3fT2fC4bN1v);
 			v.Colour = colNormal;
 			
 			if (BlockInfo.Tinted[block]) {
@@ -130,7 +130,7 @@ namespace ClassicalSharp {
 			TextureRec rec = TerrainAtlas1D.GetTexRec(texLoc, 1, out texIndex);
 			if (lastTexIndex != texIndex) Flush();
 			
-			VertexP3fT2fC4b v = default(VertexP3fT2fC4b);
+			VertexP3fT2fC4bN1v v = default(VertexP3fT2fC4bN1v);
 			v.Colour = colNormal;
 			
 			if (BlockInfo.Tinted[block]) {

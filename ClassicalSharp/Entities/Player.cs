@@ -104,7 +104,7 @@ namespace ClassicalSharp.Entities {
 			TextureRec rec; rec.U1 = 0; rec.V1 = 0; rec.U2 = nameTex.U2; rec.V2 = nameTex.V2;
 			Particle.DoRender(ref gfx.View, ref size, ref pos, ref rec, col, gfx.texVerts, ref index);
 			
-			gfx.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			gfx.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			gfx.UpdateDynamicVb_IndexedTris(gfx.texVb, gfx.texVerts, 4);
 		}
 		

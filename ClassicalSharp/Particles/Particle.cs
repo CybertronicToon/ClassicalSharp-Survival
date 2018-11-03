@@ -17,14 +17,15 @@ namespace ClassicalSharp.Particles {
 		
 		// http://www.opengl-tutorial.org/intermediate-tutorials/billboards-particles/billboards/
 		public static void DoRender(ref Matrix4 view, ref Vector2 size, ref Vector3 pos, ref TextureRec rec,
-		                            int col, VertexP3fT2fC4b[] vertices, ref int index) {
+		                            int col, VertexP3fT2fC4bN1v[] vertices, ref int index) {
 			float sX = size.X * 0.5f, sY = size.Y * 0.5f;
 			Vector3 centre = pos; centre.Y += sY;
 			Vector3 a, b;
 			
 			a.X = view.Row0.X * sX; a.Y = view.Row1.X * sX; a.Z = view.Row2.X * sX; // right * size.X * 0.5f
 			b.X = view.Row0.Y * sY; b.Y = view.Row1.Y * sY; b.Z = view.Row2.Y * sY; // up * size.Y * 0.5f
-			VertexP3fT2fC4b v; v.Colour = col;
+			VertexP3fT2fC4bN1v v; v.Colour = col;
+			v.Normal = Vector3.Zero;
 			
 			v.X = centre.X - a.X - b.X; v.Y = centre.Y - a.Y - b.Y; v.Z = centre.Z - a.Z - b.Z;
 			v.U = rec.U1; v.V = rec.V2; vertices[index++] = v;
@@ -131,7 +132,7 @@ namespace ClassicalSharp.Particles {
 			return hitTerrain ? true : dies;
 		}
 		
-		public void Render(Game game, float t, VertexP3fT2fC4b[] vertices, ref int index) {
+		public void Render(Game game, float t, VertexP3fT2fC4bN1v[] vertices, ref int index) {
 			Vector3 pos = Vector3.Lerp(lastPos, nextPos, t);
 			Vector2 size; size.X = Size * 0.015625f; size.Y = size.X;
 			
@@ -150,7 +151,7 @@ namespace ClassicalSharp.Particles {
 			return Tick(game, 5.4f, true, delta);
 		}
 		
-		public void Render(Game game, float t, VertexP3fT2fC4b[] vertices, ref int index) {
+		public void Render(Game game, float t, VertexP3fT2fC4bN1v[] vertices, ref int index) {
 			Vector3 pos = Vector3.Lerp(lastPos, nextPos, t);
 			Vector2 size; size.X = Size * 0.015625f; size.Y = size.X;
 

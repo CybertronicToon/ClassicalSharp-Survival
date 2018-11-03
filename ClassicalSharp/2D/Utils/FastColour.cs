@@ -63,6 +63,14 @@ namespace ClassicalSharp {
 			return a;
 		}
 		
+		public static FastColour Lerp2(FastColour a, FastColour b, float t) {
+			a.R = (byte)Utils.Lerp(a.R, b.R, t);
+			a.G = (byte)Utils.Lerp(a.G, b.G, t);
+			a.B = (byte)Utils.Lerp(a.B, b.B, t);
+			a.A = (byte)Utils.Lerp(a.A, b.A, t);
+			return a;
+		}
+		
 		public static FastColour GetHexEncodedCol(int hex, int lo, int hi) {
 			return new FastColour(
 				lo * ((hex >> 2) & 1) + hi * (hex >> 3),

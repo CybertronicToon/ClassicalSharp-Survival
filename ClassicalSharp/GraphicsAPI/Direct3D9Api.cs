@@ -87,6 +87,13 @@ namespace ClassicalSharp.GraphicsAPI {
 				alphaBlend = value; device.SetRenderState(RenderState.AlphaBlendEnable, value);
 			}
 		}
+		
+		bool lighting = false;
+		public override bool Lighting {
+			set { /*if (value == lighting) return;
+				lighting = value; device.SetRenderState(RenderState.Lighting, value);*/
+			}
+		}
 
 		Compare[] compareFuncs;
 		Compare alphaTestFunc = Compare.Always;
@@ -96,6 +103,21 @@ namespace ClassicalSharp.GraphicsAPI {
 			device.SetRenderState(RenderState.AlphaFunc, (int)alphaTestFunc);
 			alphaTestRef = (int)(value * 255);
 			device.SetRenderState(RenderState.AlphaRef, alphaTestRef);
+		}
+		
+		public override void BlendColour(FastColour col) {
+			int col2 = col.Pack();
+			device.SetRenderState(RenderState.BlendFactor, col2);
+		}
+		
+		BlendOperation[] blendOps;
+		BlendOperation BlendOp = BlendOperation.Add;
+		BlendOperation BlendOpAlpha = BlendOperation.Add;
+		public override void RGBAlphaBlendEquation(BlendEquation BlendEquationRGB, BlendEquation BlendEquationAlpha) {
+			BlendOp = blendOps[(int)BlendEquationRGB];
+			BlendOpAlpha = blendOps[(int)BlendEquationAlpha];
+			device.SetRenderState(RenderState.BlendOperation, (int)BlendOp);
+			device.SetRenderState(RenderState.BlendOperationAlpha, (int)BlendOpAlpha);
 		}
 
 		Blend[] blendFuncs;
@@ -234,6 +256,10 @@ namespace ClassicalSharp.GraphicsAPI {
 			texture.SetPartData(0, LockFlags.None, part.Scan0, x, y, part.Width, part.Height);
 			if (Mipmaps) DoMipmaps(texture, x, y, part.Width, part.Height, part.Scan0, true);
 		}
+		
+		public override void UpdateLightsEntity() { }
+		
+		public override void UpdateLightsHeldBlock() { }
 
 		public override void BindTexture(int texId) {
 			device.SetTexture(0, textures[texId]);
@@ -597,14 +623,19 @@ namespace ClassicalSharp.GraphicsAPI {
 			blendFuncs[5] = Blend.InverseDestinationAlpha;
 			blendFuncs[6] = Blend.SourceColor; blendFuncs[7] = Blend.InverseSourceColor;
 			blendFuncs[8] = Blend.DestinationColor; blendFuncs[9] = Blend.InverseDestinationColor;
+			blendOps = new BlendOperation[5];
+			blendOps[0] = BlendOperation.Add; blendOps[1] = BlendOperation.Subtract;
+			blendOps[2] = BlendOperation.ReverseSubtract;
+			blendOps[3] = BlendOperation.Minimum; blendOps[4] = BlendOperation.Maximum;
 			compareFuncs = new Compare[8];
 			compareFuncs[0] = Compare.Always; compareFuncs[1] = Compare.NotEqual; compareFuncs[2] = Compare.Never;
 			compareFuncs[3] = Compare.Less; compareFuncs[4] = Compare.LessEqual; compareFuncs[5] = Compare.Equal;
 			compareFuncs[6] = Compare.GreaterEqual; compareFuncs[7] = Compare.Greater;
 			
-			formatMapping = new D3D.VertexFormat[2];
+			formatMapping = new D3D.VertexFormat[3];
 			formatMapping[0] = D3D.VertexFormat.Position | D3D.VertexFormat.Diffuse;
 			formatMapping[1] = D3D.VertexFormat.Position | D3D.VertexFormat.Texture2 | D3D.VertexFormat.Diffuse;
+			formatMapping[2] = D3D.VertexFormat.Position | D3D.VertexFormat.Texture2 | D3D.VertexFormat.Diffuse;
 			modes = new FogMode[3];
 			modes[0] = FogMode.Linear; modes[1] = FogMode.Exponential; modes[2] = FogMode.ExponentialSquared;
 		}

@@ -48,7 +48,7 @@ namespace ClassicalSharp.Particles {
 		}
 		
 		
-		VertexP3fT2fC4b[] vertices = new VertexP3fT2fC4b[0];
+		VertexP3fT2fC4bN1v[] vertices = new VertexP3fT2fC4bN1v[0];
 		public void Render(double delta, float t) {
 			if (terrainCount == 0 && rainCount == 0) return;
 			if (game.Graphics.LostContext) return;
@@ -56,7 +56,7 @@ namespace ClassicalSharp.Particles {
 			IGraphicsApi gfx = game.Graphics;
 			gfx.Texturing = true;
 			gfx.AlphaTest = true;
-			gfx.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			gfx.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			
 			RenderTerrainParticles(gfx, terrainParticles, terrainCount, delta, t);
 			RenderRainParticles(gfx, rainParticles, rainCount, delta, t);
@@ -68,7 +68,7 @@ namespace ClassicalSharp.Particles {
 		unsafe void RenderTerrainParticles(IGraphicsApi gfx, TerrainParticle[] particles, int elems, double delta, float t) {
 			int count = elems * 4;
 			if (count > vertices.Length)
-				vertices = new VertexP3fT2fC4b[count];
+				vertices = new VertexP3fT2fC4bN1v[count];
 
 			Update1DCounts(particles, elems);
 			for (int i = 0; i < elems; i++) {
@@ -78,7 +78,7 @@ namespace ClassicalSharp.Particles {
 			int drawCount = Math.Min(count, maxParticles * 4);
 			if (drawCount == 0) return;
 			
-			fixed (VertexP3fT2fC4b* ptr = vertices) {
+			fixed (VertexP3fT2fC4bN1v* ptr = vertices) {
 				gfx.SetDynamicVbData(vb, (IntPtr)ptr, drawCount);
 				int offset = 0;
 				for (int i = 0; i < terrain1DCount.Length; i++) {
@@ -109,7 +109,7 @@ namespace ClassicalSharp.Particles {
 		void RenderRainParticles(IGraphicsApi gfx, RainParticle[] particles, int elems, double delta, float t) {
 			int count = elems * 4;
 			if (count > vertices.Length)
-				vertices = new VertexP3fT2fC4b[count];
+				vertices = new VertexP3fT2fC4bN1v[count];
 			
 			int index = 0;
 			for (int i = 0; i < elems; i++)
@@ -278,7 +278,7 @@ namespace ClassicalSharp.Particles {
 		void ContextLost() { game.Graphics.DeleteVb(ref vb); }
 		
 		void ContextRecreated() {
-			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4b, maxParticles * 4);
+			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4bN1v, maxParticles * 4);
 		}
 	}
 }

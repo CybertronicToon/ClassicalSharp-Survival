@@ -272,6 +272,63 @@ namespace ClassicalSharp.Commands {
 				
 				game.Lighting.sunLightSub = light2;
 				game.MapRenderer.Refresh();
+				game.MapBordersRenderer.ResetSides();
+			}
+		}
+	}
+	
+		public sealed class SetTimeCommand : Command {
+		
+		public SetTimeCommand() {
+			Name = "SetTime";
+			Help = new string[] {
+				"Sets the time.",
+			};
+		}
+		
+		public override void Execute(string[] args) {
+			if (args.Length != 2) {
+				game.Chat.Add("ERROR!");
+			} else {
+				float time = 0;
+				if (!Utils.TryParseDecimal(args[1], out time)) {
+					game.Chat.Add("ERROR!");
+					return;
+				}
+				if (time < 0) {
+					game.Chat.Add("INVALID!");
+				}
+				int time2 = (int)time;
+				
+				game.Server.Ticks = time2;
+			}
+		}
+	}
+	
+		public sealed class DoDayNightCycleCommand : Command {
+		
+		public DoDayNightCycleCommand() {
+			Name = "DoDayNightCycle";
+			Help = new string[] {
+				"Enables or disables the day/night cycle.",
+			};
+		}
+		
+		public override void Execute(string[] args) {
+			if (args.Length != 2) {
+				game.Chat.Add("ERROR!");
+			} else {
+				bool DoDayNightCycle;
+				if (Utils.CaselessEquals(args[1], "true")) {
+					DoDayNightCycle = true;
+				} else if (Utils.CaselessEquals(args[1], "false")) {
+					DoDayNightCycle = false;
+				} else {
+					game.Chat.Add("INVALID!");
+					return;
+				}
+				
+				game.Server.DoDayNightCycle = DoDayNightCycle;
 			}
 		}
 	}

@@ -102,7 +102,7 @@ namespace ClassicalSharp.Model {
 			index = 0;
 		}
 		
-		CuboidDrawer drawer = new CuboidDrawer();
+		CuboidDrawer2 drawer = new CuboidDrawer2();
 		void DrawParts(bool sprite, bool item) {
 			if (sprite && !item) {
 				SpriteXQuad(false, false);
@@ -121,6 +121,7 @@ namespace ClassicalSharp.Model {
 				SpriteZQuad(true, false);
 				SpriteZQuad(true, true);
 			} else {
+				if (isHeld) drawer.isHeld = true;
 				drawer.elementsPerAtlas1D = TerrainAtlas1D.elementsPerAtlas1D;
 				drawer.invVerElementSize  = TerrainAtlas1D.invElementSize;
 				
@@ -171,10 +172,10 @@ namespace ClassicalSharp.Model {
 				else {        rec.U1 = 0.5f; p1 = 5.5f/16; }
 			}
 			
-			cache.vertices[index++] = new VertexP3fT2fC4b(p1, 0, p1, rec.U2, rec.V2, col);
-			cache.vertices[index++] = new VertexP3fT2fC4b(p1, 1, p1, rec.U2, rec.V1, col);
-			cache.vertices[index++] = new VertexP3fT2fC4b(p2, 1, p2, rec.U1, rec.V1, col);
-			cache.vertices[index++] = new VertexP3fT2fC4b(p2, 0, p2, rec.U1, rec.V2, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(p1, 0, p1, rec.U2, rec.V2, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(p1, 1, p1, rec.U2, rec.V1, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(p2, 1, p2, rec.U1, rec.V1, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(p2, 0, p2, rec.U1, rec.V2, col);
 		}
 
 		void SpriteXQuad(bool firstPart, bool mirror) {
@@ -196,10 +197,10 @@ namespace ClassicalSharp.Model {
 				else {        rec.U2 = 0.5f; x2 = 5.5f/16; z2 = -5.5f/16; }
 			}
 
-			cache.vertices[index++] = new VertexP3fT2fC4b(x1, 0, z1, rec.U2, rec.V2, col);
-			cache.vertices[index++] = new VertexP3fT2fC4b(x1, 1, z1, rec.U2, rec.V1, col);
-			cache.vertices[index++] = new VertexP3fT2fC4b(x2, 1, z2, rec.U1, rec.V1, col);
-			cache.vertices[index++] = new VertexP3fT2fC4b(x2, 0, z2, rec.U1, rec.V2, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(x1, 0, z1, rec.U2, rec.V2, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(x1, 1, z1, rec.U2, rec.V1, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(x2, 1, z2, rec.U1, rec.V1, col);
+			cache.vertices[index++] = new VertexP3fT2fC4bN1v(x2, 0, z2, rec.U1, rec.V2, col);
 		}
 	}
 }

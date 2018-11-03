@@ -61,6 +61,8 @@ namespace ClassicalSharp {
 
 		protected Game game;
 		protected int netTicks;
+		public int Ticks;
+		public bool DoDayNightCycle = true;
 		
 		protected internal void RetrieveTexturePack(string url) {
 			if (!game.AcceptedUrls.Has(url) && !game.DeniedUrls.Has(url)) {

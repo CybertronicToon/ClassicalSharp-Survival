@@ -128,7 +128,7 @@ namespace ClassicalSharp.Gui.Screens {
 		}
 		
 		void DrawBackground() {
-			VertexP3fT2fC4b[] vertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v[] vertices = game.ModelCache.vertices;
 			int index = 0, atlasIndex = 0;
 			int drawnY = 0, height = game.Height;
 			int col = new FastColour(64, 64, 64).Pack();
@@ -157,7 +157,7 @@ namespace ClassicalSharp.Gui.Screens {
 			}
 					
 			ModelCache cache = game.ModelCache;
-			game.Graphics.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			game.Graphics.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			game.Graphics.UpdateDynamicVb_IndexedTris(cache.vb, cache.vertices, index);
 			index = 0;
 		}

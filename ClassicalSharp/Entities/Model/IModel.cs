@@ -23,6 +23,8 @@ namespace ClassicalSharp.Model {
 		public const ushort UVMask   = 0x7FFF;
 		public const ushort UVMaxBit = 0x8000;
 		public const ushort UVMaxShift = 15;
+		
+		public bool isHeld = false;
 
 		public IModel(Game game) { this.game = game; }
 		
@@ -120,11 +122,11 @@ namespace ClassicalSharp.Model {
 		
 		/// <summary> Sets up the state for, then renders an entity model,
 		/// based on the given entity's position and orientation. </summary>
-		public void Render(Entity p) {
+		public virtual void Render(Entity p) {
 			Vector3 pos = p.Position;
 			if (Bobbing) pos.Y += p.anim.bobbingModel;
 			SetupState(p);
-			game.Graphics.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			game.Graphics.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			
 			Matrix4 m = TransformMatrix(p, pos);
 			p.transform = m;
@@ -141,6 +143,7 @@ namespace ClassicalSharp.Model {
 			uScale = 1 / 64f; vScale = 1 / 32f;
 			
 			cols[0] = col;
+			#if USE_DX
 			if (!p.NoShade) {
 				cols[1] = FastColour.ScalePacked(col, FastColour.ShadeYBottom);
 				cols[2] = FastColour.ScalePacked(col, FastColour.ShadeZ);
@@ -149,10 +152,33 @@ namespace ClassicalSharp.Model {
 				cols[1] = col; cols[2] = col; cols[4] = col;
 			}
 			cols[3] = cols[2]; cols[5] = cols[4];
+			#else
+			cols[1] = col; cols[2] = col; cols[4] = col;
+			cols[3] = cols[2]; cols[5] = cols[4];
+			#endif
 			
 			float yawDelta = p.HeadY - p.RotY;
 			cosHead = (float)Math.Cos(yawDelta * Utils.Deg2Rad);
 			sinHead = (float)Math.Sin(yawDelta * Utils.Deg2Rad);
+		}
+		
+		public void SetupColours(Entity p) {
+			int col = p.Colour();
+			
+			cols[0] = col;
+			#if USE_DX
+			if (!p.NoShade) {
+				cols[1] = FastColour.ScalePacked(col, FastColour.ShadeYBottom);
+				cols[2] = FastColour.ScalePacked(col, FastColour.ShadeZ);
+				cols[4] = FastColour.ScalePacked(col, FastColour.ShadeX);
+			} else {
+				cols[1] = col; cols[2] = col; cols[4] = col;
+			}
+			cols[3] = cols[2]; cols[5] = cols[4];
+			#else
+			cols[1] = col; cols[2] = col; cols[4] = col;
+			cols[3] = cols[2]; cols[5] = cols[4];
+			#endif
 		}
 		
 		/// <summary> Performs the actual rendering of an entity model. </summary>
@@ -201,13 +227,14 @@ namespace ClassicalSharp.Model {
 		}
 		
 		protected void DrawPart(ModelPart part) {
-			VertexP3fT2fC4b vertex = default(VertexP3fT2fC4b);
-			VertexP3fT2fC4b[] finVertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v vertex = default(VertexP3fT2fC4bN1v);
+			VertexP3fT2fC4bN1v[] finVertices = game.ModelCache.vertices;
 			
 			for (int i = 0; i < part.Count; i++) {
 				ModelVertex v = vertices[part.Offset + i];
 				vertex.X = v.X; vertex.Y = v.Y; vertex.Z = v.Z;
 				vertex.Colour = cols[i >> 2];
+				vertex.Normal = v.D;
 				
 				vertex.U = (v.U & UVMask) * uScale - (v.U >> UVMaxShift) * 0.01f * uScale;
 				vertex.V = (v.V & UVMask) * vScale - (v.V >> UVMaxShift) * 0.01f * vScale;
@@ -216,12 +243,16 @@ namespace ClassicalSharp.Model {
 		}
 		
 		protected void DrawRotate(float angleX, float angleY, float angleZ, ModelPart part, bool head) {
+			DrawRotate(angleX, angleY, angleZ, part, head, false);
+		}
+		
+		protected void DrawRotate(float angleX, float angleY, float angleZ, ModelPart part, bool head, bool rotNormal) {
 			float cosX = (float)Math.Cos(-angleX), sinX = (float)Math.Sin(-angleX);
 			float cosY = (float)Math.Cos(-angleY), sinY = (float)Math.Sin(-angleY);
 			float cosZ = (float)Math.Cos(-angleZ), sinZ = (float)Math.Sin(-angleZ);
 			float x = part.RotX, y = part.RotY, z = part.RotZ;
-			VertexP3fT2fC4b vertex = default(VertexP3fT2fC4b);
-			VertexP3fT2fC4b[] finVertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v vertex = default(VertexP3fT2fC4bN1v);
+			VertexP3fT2fC4bN1v[] finVertices = game.ModelCache.vertices;
 			
 			for (int i = 0; i < part.Count; i++) {
 				ModelVertex v = vertices[part.Offset + i];
@@ -249,6 +280,38 @@ namespace ClassicalSharp.Model {
 				}
 				vertex.X = v.X + x; vertex.Y = v.Y + y; vertex.Z = v.Z + z;
 				vertex.Colour = cols[i >> 2];
+				if (!v.N) {
+					vertex.Normal = v.D;
+				}
+				float normalAngleX = angleX;
+				float normalAngleY = angleY;
+				float normalAngleZ = angleZ;
+				if (rotNormal) {
+					normalAngleX = angleX;
+					normalAngleY = angleY;
+					normalAngleZ = -angleZ;
+				}
+				if (Rotate == RotateOrder.ZYX) {
+					Vector3 newNormal = vertex.Normal;
+					newNormal = Utils.RotateZ(newNormal, -normalAngleZ);
+					newNormal = Utils.RotateY(newNormal, -normalAngleY);
+					newNormal = Utils.RotateX(newNormal, -normalAngleX);
+					vertex.Normal = newNormal;
+				} else if (Rotate == RotateOrder.XZY) {
+					Vector3 newNormal = vertex.Normal;
+					newNormal = Utils.RotateX(newNormal, -normalAngleX);
+					newNormal = Utils.RotateZ(newNormal, -normalAngleZ);
+					newNormal = Utils.RotateY(newNormal, -normalAngleY);
+					vertex.Normal = newNormal;
+				} else if (Rotate == RotateOrder.YZX) {
+					Vector3 newNormal = vertex.Normal;
+					newNormal = Utils.RotateY(newNormal, -normalAngleY);
+					newNormal = Utils.RotateZ(newNormal, -normalAngleZ);
+					newNormal = Utils.RotateX(newNormal, -normalAngleX);
+					vertex.Normal = newNormal;
+				}
+				
+				v.N = true;
 				
 				vertex.U = (v.U & UVMask) * uScale - (v.U >> UVMaxShift) * 0.01f * uScale;
 				vertex.V = (v.V & UVMask) * vScale - (v.V >> UVMaxShift) * 0.01f * vScale;

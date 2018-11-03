@@ -38,6 +38,8 @@ namespace ClassicalSharp.Commands {
 			Register(new TeleportCommand());
 			Register(new SpawnCommand());
 			Register(new SunLightSubCommand());
+			Register(new SetTimeCommand());
+			Register(new DoDayNightCycleCommand());
 		}
 
 		public void Ready(Game game) { }

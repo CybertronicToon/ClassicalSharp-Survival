@@ -98,6 +98,10 @@ namespace ClassicalSharp.GraphicsAPI {
 		/// of the native texture associated with the given ID, with the pixels encapsulated in the 'part' instance. </summary>
 		public abstract void UpdateTexturePart(int texId, int x, int y, FastBitmap part, bool mipmaps);
 		
+		public abstract void UpdateLightsEntity();
+		
+		public abstract void UpdateLightsHeldBlock();
+		
 		/// <summary> Binds the given texture id so that it can be used for rasterization. </summary>
 		public abstract void BindTexture(int texId);
 		
@@ -145,6 +149,12 @@ namespace ClassicalSharp.GraphicsAPI {
 		
 		/// <summary> Whether alpha blending is currently enabled. </summary>
 		public abstract bool AlphaBlending { set; }
+		
+		public abstract bool Lighting { set; }
+		
+		public abstract void BlendColour(FastColour col);
+		
+		public abstract void RGBAlphaBlendEquation(BlendEquation BlendEquationRGB, BlendEquation BlendEquationAlpha);
 		
 		/// <summary> Sets the alpha blend function that is used when alpha blending is enabled. </summary>
 		public abstract void AlphaBlendFunc(BlendFunc srcFunc, BlendFunc dstFunc);
@@ -216,7 +226,7 @@ namespace ClassicalSharp.GraphicsAPI {
 		/// <summary> Optimised version of DrawIndexedVb for VertexFormat.Pos3fTex2fCol4b </summary>
 		internal abstract void DrawIndexedVb_TrisT2fC4b(int verticesCount, int startVertex);
 		
-		protected static int[] strideSizes = new int[] { 16, 24 };
+		protected static int[] strideSizes = new int[] { 16, 24, 36 };
 		
 		
 		/// <summary> Sets the matrix type that load/push/pop operations should be applied to. </summary>

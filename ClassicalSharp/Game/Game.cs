@@ -91,6 +91,8 @@ namespace ClassicalSharp {
 			Vertices = 0;
 			Mode.BeginFrame(delta);
 			
+			Graphics.UpdateLightsEntity();
+			
 			Camera.UpdateMouse();
 			if (!Focused && !Gui.ActiveScreen.HandlesAllInput)
 				Gui.SetNewScreen(new PauseScreen(this));
@@ -136,13 +138,15 @@ namespace ClassicalSharp {
 		void Render3D(double delta, float t) {
 			if (SkyboxRenderer.ShouldRender)
 				SkyboxRenderer.Render(delta);
+			EnvRenderer.Render(delta);
 			AxisLinesRenderer.Render(delta);
+			Graphics.Lighting = true;
 			Entities.RenderModels(Graphics, delta, t);
+			Graphics.Lighting = false;
 			Entities.RenderNames(Graphics, delta);
 			
 			ParticleManager.Render(delta, t);
 			Camera.GetPickedBlock(SelectedPos); // TODO: only pick when necessary
-			EnvRenderer.Render(delta);
 			MapRenderer.Update(delta);
 			MapRenderer.RenderNormal(delta);
 			MapRenderer.RenderLiquid(delta);

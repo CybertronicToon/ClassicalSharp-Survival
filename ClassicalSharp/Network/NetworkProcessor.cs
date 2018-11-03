@@ -126,8 +126,12 @@ namespace ClassicalSharp.Network {
 		}
 		
 		void CoreTick() {
+			if (DoDayNightCycle) {
+				Ticks++;
+			}
 			CheckAsyncResources();
 			wom.Tick();
+			game.Mode.Tick();
 			
 			if (receivedFirstPosition) {				
 				LocalPlayer player = game.LocalPlayer;

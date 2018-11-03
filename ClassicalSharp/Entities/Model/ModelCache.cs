@@ -19,10 +19,10 @@ namespace ClassicalSharp.Model {
 		public List<CachedModel> Models = new List<CachedModel>();
 		public List<CachedTexture> Textures = new List<CachedTexture>();
 		public int vb;
-		public VertexP3fT2fC4b[] vertices;
+		public VertexP3fT2fC4bN1v[] vertices;
 
 		public void InitCache() {
-			vertices = new VertexP3fT2fC4b[24 * 12];
+			vertices = new VertexP3fT2fC4bN1v[24 * 12];
 			RegisterDefaultModels();
 			ContextRecreated();
 			
@@ -122,7 +122,7 @@ namespace ClassicalSharp.Model {
 		void ContextLost() { game.Graphics.DeleteVb(ref vb); }
 		
 		void ContextRecreated() {
-			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4b, vertices.Length);
+			vb = game.Graphics.CreateDynamicVb(VertexFormat.P3fT2fC4bN1v, vertices.Length);
 		}
 	}
 	

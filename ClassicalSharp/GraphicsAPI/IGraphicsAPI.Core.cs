@@ -9,7 +9,7 @@ namespace ClassicalSharp.GraphicsAPI {
 		
 		protected void InitDynamicBuffers() {
 			quadVb = CreateDynamicVb(VertexFormat.P3fC4b, 4);
-			texVb = CreateDynamicVb(VertexFormat.P3fT2fC4b, 4);
+			texVb = CreateDynamicVb(VertexFormat.P3fT2fC4bN1v, 4);
 		}
 		
 		public virtual void Dispose() {
@@ -62,6 +62,15 @@ namespace ClassicalSharp.GraphicsAPI {
 			}
 		}
 		
+		/// <summary> Binds and draws the specified subset of the vertices in the current dynamic vertex buffer<br/>
+		/// This method also replaces the dynamic vertex buffer's data first with the given vertices before drawing. </summary>
+		public void UpdateDynamicVb_IndexedTris(int vb, VertexP3fT2fC4bN1v[] vertices, int vCount) {
+			fixed (VertexP3fT2fC4bN1v* ptr = vertices) {
+				SetDynamicVbData(vb, (IntPtr)ptr, vCount);
+				DrawVb_IndexedTris(vCount);
+			}
+		}
+		
 		
 		internal VertexP3fC4b[] quadVerts = new VertexP3fC4b[4];
 		internal int quadVb;
@@ -88,12 +97,12 @@ namespace ClassicalSharp.GraphicsAPI {
 			UpdateDynamicVb_IndexedTris(quadVb, quadVerts, 4);
 		}
 		
-		internal VertexP3fT2fC4b[] texVerts = new VertexP3fT2fC4b[4];
+		internal VertexP3fT2fC4bN1v[] texVerts = new VertexP3fT2fC4bN1v[4];
 		internal int texVb;
 		public virtual void Draw2DTexture(ref Texture tex, FastColour col) {
 			int index = 0;
 			Make2DQuad(ref tex, col.Pack(), texVerts, ref index);
-			SetBatchFormat(VertexFormat.P3fT2fC4b);
+			SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			UpdateDynamicVb_IndexedTris(texVb, texVerts, 4);
 		}
 		
@@ -108,6 +117,24 @@ namespace ClassicalSharp.GraphicsAPI {
 			#endif
 			
 			VertexP3fT2fC4b v; v.Z = 0; v.Colour = col;
+			v.X = x1; v.Y = y1; v.U = tex.U1; v.V = tex.V1; vertices[index++] = v;
+			v.X = x2;           v.U = tex.U2;               vertices[index++] = v;
+			v.Y = y2;                         v.V = tex.V2; vertices[index++] = v;
+			v.X = x1;           v.U = tex.U1;               vertices[index++] = v;
+		}
+		
+		public static void Make2DQuad(ref Texture tex, int col,
+		                              VertexP3fT2fC4bN1v[] vertices, ref int index) {
+			float x1 = tex.X, y1 = tex.Y, x2 = tex.X + tex.Width, y2 = tex.Y + tex.Height;
+			#if USE_DX
+			// NOTE: see "https://msdn.microsoft.com/en-us/library/windows/desktop/bb219690(v=vs.85).aspx",
+			// i.e. the msdn article called "Directly Mapping Texels to Pixels (Direct3D 9)" for why we have to do this.
+			x1 -= 0.5f; x2 -= 0.5f;
+			y1 -= 0.5f; y2 -= 0.5f;
+			#endif
+			
+			VertexP3fT2fC4bN1v v; v.Z = 0; v.Colour = col;
+			v.Normal = new Vector3(0, 0, 1);;
 			v.X = x1; v.Y = y1; v.U = tex.U1; v.V = tex.V1; vertices[index++] = v;
 			v.X = x2;           v.U = tex.U2;               vertices[index++] = v;
 			v.Y = y2;                         v.V = tex.V2; vertices[index++] = v;
@@ -226,7 +253,7 @@ namespace ClassicalSharp.GraphicsAPI {
 	}
 
 	public enum VertexFormat {
-		P3fC4b = 0, P3fT2fC4b = 1,
+		P3fC4b = 0, P3fT2fC4b = 1, P3fT2fC4bN1v = 2,
 	}
 	
 	public enum CompareFunc {
@@ -239,6 +266,14 @@ namespace ClassicalSharp.GraphicsAPI {
 		Equal = 5,
 		GreaterEqual = 6,
 		Greater = 7,
+	}
+	
+	public enum BlendEquation {
+		Add = 0, 
+		Subtract = 1,
+		ReverseSubtract = 2,
+		Minimum = 3,
+		Maximum = 4,
 	}
 	
 	public enum BlendFunc {

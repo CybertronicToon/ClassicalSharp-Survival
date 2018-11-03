@@ -48,7 +48,7 @@ namespace ClassicalSharp {
 		
 		/// <summary> Adjusts the head X rotation of the player to avoid looking straight up or down. </summary>
 		/// <remarks> Looking straight up or down (parallel to camera up vector) can otherwise cause rendering issues. </remarks>
-		protected float AdjustHeadX(float value) {
+		public float AdjustHeadX(float value) {
 			if (value >= 90.0f && value <= 90.1f) return 90.1f * Utils.Deg2Rad;
 			if (value >= 89.9f && value <= 90.0f) return 89.9f * Utils.Deg2Rad;
 			if (value >= 270.0f && value <= 270.1f) return 270.1f * Utils.Deg2Rad;

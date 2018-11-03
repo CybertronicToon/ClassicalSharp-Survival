@@ -130,7 +130,7 @@ namespace ClassicalSharp.Gui.Screens {
 			
 			Vector3I pos = Vector3I.Floor(game.LocalPlayer.Position);
 			posAtlas.curX = posAtlas.offset + 2;
-			VertexP3fT2fC4b[] vertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v[] vertices = game.ModelCache.vertices;
 			
 			posAtlas.Add(13, vertices, ref index);
 			posAtlas.AddInt(pos.X, vertices, ref index);

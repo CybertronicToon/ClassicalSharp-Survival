@@ -29,7 +29,7 @@ namespace ClassicalSharp.Entities {
 			int index = 0, vb = 0;
 			radius = 7f * Math.Min(entity.ModelScale.Y, 1) * entity.Model.ShadowScale;
 			
-			VertexP3fT2fC4b[] verts = null;
+			VertexP3fT2fC4bN1v[] verts = null;
 			int dataCount = 0;
 			ShadowData* data = stackalloc ShadowData[4];
 			
@@ -69,17 +69,17 @@ namespace ClassicalSharp.Entities {
 		}
 		
 		const byte c = 255; // avoids 'ambiguous match' compile errors.
-		static void DrawSquareShadow(VertexP3fT2fC4b[] verts, ref int index,
+		static void DrawSquareShadow(VertexP3fT2fC4bN1v[] verts, ref int index,
 		                             float y, float x, float z) {
 			int col = new FastColour(c, c, c, (byte)220).Pack();
 			TextureRec rec = new TextureRec(63/128f, 63/128f, 1/128f, 1/128f);
-			verts[index++] = new VertexP3fT2fC4b(x, y, z, rec.U1, rec.V1, col);
-			verts[index++] = new VertexP3fT2fC4b(x + 1, y, z, rec.U2, rec.V1, col);
-			verts[index++] = new VertexP3fT2fC4b(x + 1, y, z + 1, rec.U2, rec.V2, col);
-			verts[index++] = new VertexP3fT2fC4b(x, y, z + 1, rec.U1, rec.V2, col);
+			verts[index++] = new VertexP3fT2fC4bN1v(x, y, z, rec.U1, rec.V1, col);
+			verts[index++] = new VertexP3fT2fC4bN1v(x + 1, y, z, rec.U2, rec.V1, col);
+			verts[index++] = new VertexP3fT2fC4bN1v(x + 1, y, z + 1, rec.U2, rec.V2, col);
+			verts[index++] = new VertexP3fT2fC4bN1v(x, y, z + 1, rec.U1, rec.V2, col);
 		}
 		
-		static void DrawCircle(VertexP3fT2fC4b[] verts, ref int index,
+		static void DrawCircle(VertexP3fT2fC4bN1v[] verts, ref int index,
 		                       ShadowData* data, int dataCount, float x, float z) {
 			Vector3 min = BlockInfo.MinBB[data[0].Block], max = BlockInfo.MaxBB[data[0].Block];
 			
@@ -95,7 +95,7 @@ namespace ClassicalSharp.Entities {
 			}
 		}
 		
-		static void DrawCoords(VertexP3fT2fC4b[] verts, ref int index, ShadowData data,
+		static void DrawCoords(VertexP3fT2fC4bN1v[] verts, ref int index, ShadowData data,
 		                       float x1, float z1, float x2, float z2) {
 			Vector3 cen = entity.Position;
 			
@@ -112,7 +112,8 @@ namespace ClassicalSharp.Entities {
 			z2 = Math.Min(z2, cen.Z + radius/16f); v2 = v2 <= 1 ? v2 : 1;
 			
 			int col = new FastColour(c, c, c, data.A).Pack();
-			VertexP3fT2fC4b v; v.Y = data.Y; v.Colour = col;
+			VertexP3fT2fC4bN1v v; v.Y = data.Y; v.Colour = col;
+			v.Normal = Vector3.Zero;
 			v.X = x1; v.Z = z1; v.U = u1; v.V = v1; verts[index++] = v;
 			v.X = x2;           v.U = u2;           verts[index++] = v;
 			          v.Z = z2;           v.V = v2; verts[index++] = v;

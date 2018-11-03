@@ -33,11 +33,14 @@ namespace ClassicalSharp.GraphicsAPI {
 			
 			setupBatchFuncCol4b = SetupVbPos3fCol4b;
 			setupBatchFuncTex2fCol4b = SetupVbPos3fTex2fCol4b;
+			setupBatchFuncTex2fCol4bNor1v = SetupVbPos3fTex2fCol4bNor1v;
 			setupBatchFuncCol4b_Range = SetupVbPos3fCol4b_Range;
 			setupBatchFuncTex2fCol4b_Range = SetupVbPos3fTex2fCol4b_Range;
+			setupBatchFuncTex2fCol4bNor1v_Range = SetupVbPos3fTex2fCol4bNor1v_Range;
 			
 			GL.EnableClientState(ArrayCap.VertexArray);
 			GL.EnableClientState(ArrayCap.ColorArray);
+			GL.EnableClientState(ArrayCap.NormalArray);
 		}
 		
 		void CheckVboSupport() {
@@ -76,9 +79,30 @@ namespace ClassicalSharp.GraphicsAPI {
 				else GL.Disable(EnableCap.Blend); }
 		}
 		
+		public override bool Lighting {
+			set { if (value) {
+					GL.Enable(EnableCap.Lighting);
+					GL.Enable(EnableCap.ColorMaterial);
+				}
+				else {
+					GL.Disable(EnableCap.ColorMaterial);
+					GL.Disable(EnableCap.Lighting);
+				}
+			}
+		}
+		
 		Compare[] compareFuncs;
 		public override void AlphaTestFunc(CompareFunc func, float value) {
 			GL.AlphaFunc(compareFuncs[(int)func], value);
+		}
+		
+		public override void BlendColour(FastColour col) {
+			GL.BlendColor(col.R / 255f, col.G / 255f, col.B / 255f, col.A / 255f);
+		}
+		
+		BlendEquationMode[] blendEquations;
+		public override void RGBAlphaBlendEquation(BlendEquation BlendEquationRGB, BlendEquation BlendEquationAlpha) {
+			GL.BlendEquationSeparate(blendEquations[(int)BlendEquationRGB], blendEquations[(int)BlendEquationAlpha]);
 		}
 		
 		BlendingFactor[] blendFuncs;
@@ -262,6 +286,66 @@ namespace ClassicalSharp.GraphicsAPI {
 			if (mipmaps) DoMipmaps(texId, x, y, part.Width, part.Height, part.Scan0, true);
 		}
 		
+		public override void UpdateLightsEntity() {
+			GL.Enable(EnableCap.Light0);
+			GL.Enable(EnableCap.Light1);
+			GL.Enable(EnableCap.Light2);
+			
+			GL.Lightfv(LightName.Light0, LightParameter.Diffuse, new float[] {0.75f, 0.75f, 0.75f, 0});
+			GL.Lightfv(LightName.Light1, LightParameter.Diffuse, new float[] {0.45f, 0.45f, 0.45f, 0f});
+			GL.Lightfv(LightName.Light2, LightParameter.Diffuse, new float[] {0.45f, 0.45f, 0.45f, 0f});
+			
+			GL.Lightfv(LightName.Light0, LightParameter.Specular, new float[] {0f, 0f, 0f, 0f});
+			GL.Lightfv(LightName.Light1, LightParameter.Specular, new float[] {0f, 0f, 0f, 0f});
+			GL.Lightfv(LightName.Light2, LightParameter.Specular, new float[] {0f, 0f, 0f, 0f});
+			
+			GL.Lightfv(LightName.Light1, LightParameter.Ambient, new float[] {0.075f, 0.075f, 0.075f, 0});
+			GL.Lightfv(LightName.Light2, LightParameter.Ambient, new float[] {0.075f, 0.075f, 0.075f, 0});
+			
+			GL.Lightf(LightName.Light1, LightParameter.SpotExponent, 0f);
+			GL.Lightf(LightName.Light2, LightParameter.SpotExponent, 0f);
+			
+			GL.Lightfv(LightName.Light0, LightParameter.Position, new float[] {0f, 1f, 0f, 0});
+			GL.Lightfv(LightName.Light1, LightParameter.Position, new float[] {0f, 0f, -1f, 0});
+			GL.Lightfv(LightName.Light2, LightParameter.Position, new float[] {0f, 0f, 1f, 0});
+		}
+		
+		public override void UpdateLightsHeldBlock() {
+			GL.Enable(EnableCap.Light0);
+			GL.Enable(EnableCap.Light1);
+			GL.Enable(EnableCap.Light2);
+			
+			GL.Lightfv(LightName.Light0, LightParameter.Diffuse, new float[] {0.35f, 0.35f, 0.35f, 0f});
+			GL.Lightfv(LightName.Light1, LightParameter.Diffuse, new float[] {0.15f, 0.15f, 0.15f, 0f});
+			GL.Lightfv(LightName.Light2, LightParameter.Diffuse, new float[] {0.15f, 0.15f, 0.15f, 0f});
+			
+			GL.Lightfv(LightName.Light0, LightParameter.Specular, new float[] {0.35f, 0.35f, 0.35f, 0.35f});
+			GL.Lightfv(LightName.Light1, LightParameter.Specular, new float[] {0f, 0f, 0f, 0f});
+			GL.Lightfv(LightName.Light2, LightParameter.Specular, new float[] {0f, 0f, 0f, 0f});
+			
+			GL.Lightfv(LightName.Light1, LightParameter.Ambient, new float[] {0.1f, 0.1f, 0.1f, 0});
+			GL.Lightfv(LightName.Light2, LightParameter.Ambient, new float[] {0.1f, 0.1f, 0.1f, 0});
+			
+			GL.Lightf(LightName.Light1, LightParameter.SpotExponent, 0f);
+			GL.Lightf(LightName.Light2, LightParameter.SpotExponent, 0f);
+			
+			Vector3 vec1 = new Vector3(0f, 1f, 0f);
+			Vector3 vec2 = new Vector3(0f, 0f, -1f);
+			Vector3 vec3 = new Vector3(0f, 0f, 1f);
+			Matrix4 mat1;
+			Matrix4.CreateFromAxisAngle(new Vector3(0f, 1f, 0f), 45, out mat1);
+			Vector3.Transform(ref vec1, ref mat1, out vec1);
+			Vector3.Transform(ref vec2, ref mat1, out vec2);
+			Vector3.Transform(ref vec3, ref mat1, out vec3);
+			
+			//GL.Lightfv(LightName.Light0, LightParameter.Position, new float[] {vec1.X, vec1.Y, vec1.Z, 0});
+			//GL.Lightfv(LightName.Light1, LightParameter.Position, new float[] {vec2.X, vec2.Y, vec2.Z, 0});
+			//GL.Lightfv(LightName.Light2, LightParameter.Position, new float[] {vec3.X, vec3.Y, vec3.Z, 0});
+			GL.Lightfv(LightName.Light0, LightParameter.Position, new float[] {0f, 1f, 0f, 0});
+			GL.Lightfv(LightName.Light1, LightParameter.Position, new float[] {-1f, 0f, -1f, 0});
+			GL.Lightfv(LightName.Light2, LightParameter.Position, new float[] {1f, 0f, 1f, 0});
+		}
+		
 		public override void DeleteTexture(ref int texId) {
 			if (texId <= 0) return;
 			int id = texId; GL.DeleteTextures(1, &id);
@@ -274,8 +358,10 @@ namespace ClassicalSharp.GraphicsAPI {
 		#endregion
 		
 		#region Vertex/index buffers
-		Action setupBatchFunc, setupBatchFuncCol4b, setupBatchFuncTex2fCol4b;
-		Action<int> setupBatchFunc_Range, setupBatchFuncCol4b_Range, setupBatchFuncTex2fCol4b_Range;
+		Action setupBatchFunc, setupBatchFuncCol4b, setupBatchFuncTex2fCol4b,
+			setupBatchFuncTex2fCol4bNor1v;
+		Action<int> setupBatchFunc_Range, setupBatchFuncCol4b_Range, setupBatchFuncTex2fCol4b_Range,
+			setupBatchFuncTex2fCol4bNor1v_Range;
 		
 		public override int CreateDynamicVb(VertexFormat format, int maxVertices) {
 			if (glLists) return dynamicListId;
@@ -298,11 +384,17 @@ namespace ClassicalSharp.GraphicsAPI {
 				ushort* indicesPtr = stackalloc ushort[maxIndices];
 				MakeIndices(indicesPtr, maxIndices);
 				
-				int stride = format == VertexFormat.P3fT2fC4b ? VertexP3fT2fC4b.Size : VertexP3fC4b.Size;
+				int stride = 0;
+				if (format == VertexFormat.P3fT2fC4b) stride = VertexP3fT2fC4b.Size;
+				else if (format == VertexFormat.P3fT2fC4bN1v) stride = VertexP3fT2fC4bN1v.Size;
+				else stride = VertexP3fC4b.Size;
 				GL.VertexPointer(3, PointerType.Float, stride, vertices);
 				GL.ColorPointer(4, PointerType.UnsignedByte, stride, (IntPtr)((byte*)vertices + 12));
 				if (format == VertexFormat.P3fT2fC4b) {
 					GL.TexCoordPointer(2, PointerType.Float, stride, (IntPtr)((byte*)vertices + 16));
+				} else if (format == VertexFormat.P3fT2fC4bN1v) {
+					GL.TexCoordPointer(2, PointerType.Float, stride, (IntPtr)((byte*)vertices + 16));
+					GL.NormalPointer(NormalPointerType.Float, stride, (IntPtr)((byte*)vertices + 24));
 				}
 				
 				GL.DrawElements(BeginMode.Triangles, (count >> 2) * 6, DrawElementsType.UnsignedShort, (IntPtr)indicesPtr);
@@ -358,6 +450,14 @@ namespace ClassicalSharp.GraphicsAPI {
 			GL.Vertex3f(v.X, v.Y, v.Z);
 		}
 		
+		static void V(VertexP3fT2fC4bN1v v) {
+			FastColour AAA = FastColour.Unpack(v.Colour);
+			GL.Color4ub(AAA.R, AAA.G, AAA.B, AAA.A);
+			GL.TexCoord2f(v.U, v.V);
+			GL.Vertex3f(v.X, v.Y, v.Z);
+			GL.Normal3f(v.Normal.X, v.Normal.Y, v.Normal.Z);
+		}
+		
 		public override void DeleteVb(ref int vb) {
 			if (vb <= 0) return;
 			int id = vb; vb = -1;
@@ -378,6 +478,9 @@ namespace ClassicalSharp.GraphicsAPI {
 			
 			if (batchFormat == VertexFormat.P3fT2fC4b) {
 				GL.DisableClientState(ArrayCap.TextureCoordArray);
+			} else if (batchFormat == VertexFormat.P3fT2fC4bN1v) {
+				GL.DisableClientState(ArrayCap.TextureCoordArray);
+				GL.DisableClientState(ArrayCap.NormalArray);
 			}
 			
 			batchFormat = format;
@@ -386,6 +489,12 @@ namespace ClassicalSharp.GraphicsAPI {
 				setupBatchFunc = setupBatchFuncTex2fCol4b;
 				setupBatchFunc_Range = setupBatchFuncTex2fCol4b_Range;
 				batchStride = VertexP3fT2fC4b.Size;
+			} else if (format == VertexFormat.P3fT2fC4bN1v) {
+				GL.EnableClientState(ArrayCap.TextureCoordArray);
+				GL.EnableClientState(ArrayCap.NormalArray);
+				setupBatchFunc = setupBatchFuncTex2fCol4bNor1v;
+				setupBatchFunc_Range = setupBatchFuncTex2fCol4bNor1v_Range;
+				batchStride = VertexP3fT2fC4bN1v.Size;
 			} else {
 				setupBatchFunc = setupBatchFuncCol4b;
 				setupBatchFunc_Range = setupBatchFuncCol4b_Range;
@@ -457,6 +566,12 @@ namespace ClassicalSharp.GraphicsAPI {
 					V(ptr[i + 0]); V(ptr[i + 1]); V(ptr[i + 2]);
 					V(ptr[i + 2]); V(ptr[i + 3]); V(ptr[i + 0]);
 				}
+			} else if (batchFormat == VertexFormat.P3fT2fC4bN1v) {
+				VertexP3fT2fC4bN1v* ptr = (VertexP3fT2fC4bN1v*)dynamicListData;
+				for (int i = startVertex; i < startVertex + verticesCount; i += 4) {
+					V(ptr[i + 0]); V(ptr[i + 1]); V(ptr[i + 2]);
+					V(ptr[i + 2]); V(ptr[i + 3]); V(ptr[i + 0]);
+				}
 			} else {
 				VertexP3fC4b* ptr = (VertexP3fC4b*)dynamicListData;
 				for (int i = startVertex; i < startVertex + verticesCount; i += 4) {
@@ -484,7 +599,8 @@ namespace ClassicalSharp.GraphicsAPI {
 			GL.DrawElements(BeginMode.Triangles, (verticesCount >> 2) * 6, indexType, IntPtr.Zero);
 		}
 		
-		IntPtr zero = new IntPtr(0), twelve = new IntPtr(12), sixteen = new IntPtr(16);
+		IntPtr zero = new IntPtr(0), twelve = new IntPtr(12), sixteen = new IntPtr(16),
+			twentyfour = new IntPtr(24);
 		
 		void SetupVbPos3fCol4b() {
 			GL.VertexPointer(3, PointerType.Float, VertexP3fC4b.Size, zero);
@@ -495,6 +611,13 @@ namespace ClassicalSharp.GraphicsAPI {
 			GL.VertexPointer(3, PointerType.Float, VertexP3fT2fC4b.Size, zero);
 			GL.ColorPointer(4, PointerType.UnsignedByte, VertexP3fT2fC4b.Size, twelve);
 			GL.TexCoordPointer(2, PointerType.Float, VertexP3fT2fC4b.Size, sixteen);
+		}
+		
+		void SetupVbPos3fTex2fCol4bNor1v() {
+			GL.VertexPointer(3, PointerType.Float, VertexP3fT2fC4bN1v.Size, zero);
+			GL.ColorPointer(4, PointerType.UnsignedByte, VertexP3fT2fC4bN1v.Size, twelve);
+			GL.TexCoordPointer(2, PointerType.Float, VertexP3fT2fC4bN1v.Size, sixteen);
+			GL.NormalPointer(NormalPointerType.Float, VertexP3fT2fC4bN1v.Size, twentyfour);
 		}
 		
 		void SetupVbPos3fCol4b_Range(int startVertex) {
@@ -508,6 +631,14 @@ namespace ClassicalSharp.GraphicsAPI {
 			GL.VertexPointer(3, PointerType.Float, VertexP3fT2fC4b.Size, new IntPtr(offset));
 			GL.ColorPointer(4, PointerType.UnsignedByte, VertexP3fT2fC4b.Size, new IntPtr(offset + 12));
 			GL.TexCoordPointer(2, PointerType.Float, VertexP3fT2fC4b.Size, new IntPtr(offset + 16));
+		}
+		
+		void SetupVbPos3fTex2fCol4bNor1v_Range(int startVertex) {
+			int offset = startVertex * VertexP3fT2fC4bN1v.Size;
+			GL.VertexPointer(3, PointerType.Float, VertexP3fT2fC4bN1v.Size, new IntPtr(offset));
+			GL.ColorPointer(4, PointerType.UnsignedByte, VertexP3fT2fC4bN1v.Size, new IntPtr(offset + 12));
+			GL.TexCoordPointer(2, PointerType.Float, VertexP3fT2fC4bN1v.Size, new IntPtr(offset + 16));
+			GL.NormalPointer(NormalPointerType.Float, VertexP3fT2fC4bN1v.Size, new IntPtr(offset + 24));
 		}
 		#endregion
 		
@@ -605,6 +736,10 @@ namespace ClassicalSharp.GraphicsAPI {
 			blendFuncs[4] = BlendingFactor.DstAlpha; blendFuncs[5] = BlendingFactor.OneMinusDstAlpha;
 			blendFuncs[6] = BlendingFactor.SrcColor; blendFuncs[7] = BlendingFactor.OneMinusSrcColor;
 			blendFuncs[8] = BlendingFactor.DstColor; blendFuncs[9] = BlendingFactor.OneMinusDstColor;
+			blendEquations = new BlendEquationMode[5];
+			blendEquations[0] = BlendEquationMode.FuncAdd; blendEquations[1] = BlendEquationMode.FuncSubtract;
+			blendEquations[2] = BlendEquationMode.FuncReverseSubtract;
+			blendEquations[3] = BlendEquationMode.Min; blendEquations[4] = BlendEquationMode.Max;
 			compareFuncs = new Compare[8];
 			compareFuncs[0] = Compare.Always; compareFuncs[1] = Compare.Notequal;
 			compareFuncs[2] = Compare.Never; compareFuncs[3] = Compare.Less;

@@ -43,6 +43,8 @@ namespace ClassicalSharp.Renderers {
 		
 		public void Render(double delta) {
 			if (!game.ShowBlockInHand) return;
+			game.Graphics.Lighting = true;
+			game.Graphics.UpdateLightsHeldBlock();
 
 			float lastSwingY = swingY; swingY = 0;
 			if (game.Mode is ClassicalSharp.Mode.CreativeGameMode) 	{
@@ -66,6 +68,7 @@ namespace ClassicalSharp.Renderers {
 			game.Graphics.SetMatrixMode(MatrixType.Projection);
 			game.Graphics.LoadMatrix(ref game.Graphics.Projection);
 			game.Graphics.SetMatrixMode(MatrixType.Modelview);
+			game.Graphics.Lighting = false;
 		}
 		
 		void RenderModel() {
@@ -82,6 +85,7 @@ namespace ClassicalSharp.Renderers {
 				model = game.ModelCache.Get("block");
 				held.ModelScale = new Vector3(0.4f);
 			}
+			model.isHeld = true;
 			model.Render(held);
 			
 			game.Graphics.Texturing = false;
@@ -251,6 +255,7 @@ namespace ClassicalSharp.Renderers {
 			Player realP = game.LocalPlayer;
 			int col = realP.Colour();
 			
+			#if USE_DX
 			// Adjust pitch so angle when looking straight down is 0.
 			float adjHeadX = realP.HeadX - 90;
 			if (adjHeadX < 0) adjHeadX += 360;
@@ -259,6 +264,9 @@ namespace ClassicalSharp.Renderers {
 			float t = Math.Abs(adjHeadX - 180) / 180;
 			float colScale = Utils.Lerp(0.9f, 0.7f, t);
 			return FastColour.ScalePacked(col, colScale);
+			#else
+			return col;
+			#endif
 		}
 	}
 }

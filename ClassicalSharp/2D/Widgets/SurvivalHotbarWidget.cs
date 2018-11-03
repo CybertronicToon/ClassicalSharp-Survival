@@ -63,7 +63,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		
 		void DrawCounts() {
 			SurvivalGameMode surv = (SurvivalGameMode)game.Mode;
-			VertexP3fT2fC4b[] vertices = game.ModelCache.vertices;
+			VertexP3fT2fC4bN1v[] vertices = game.ModelCache.vertices;
 			int index = 0;
 			posAtlas.tex.Y = (short)(Y + (Height - (int)(12 * game.GuiHotbarScale)));
 			int xAdj = (int)(14 * game.GuiHotbarScale);

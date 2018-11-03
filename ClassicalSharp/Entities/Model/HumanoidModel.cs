@@ -18,7 +18,7 @@ namespace ClassicalSharp.Model {
 		protected BoxDesc head, torso, lLeg, rLeg, lArm, rArm;
 		protected float offset = 0.5f;
 		public override void CreateParts() {
-			vertices = new ModelVertex[boxVertices * (7 + 7 + 4)];
+			vertices = new ModelVertex[boxVertices * (7 + 8 + 4)];
 			Set = new ModelSet();
 			MakeDescriptions();
 			
@@ -38,7 +38,7 @@ namespace ClassicalSharp.Model {
 			Set64.RightLeg = Set.RightLeg;
 			Set64.Hat = Set.Hat;
 			Set64.LeftArm = BuildBox(lArm.TexOrigin(32, 48));
-			Set64.RightArm = Set.RightArm;
+			Set64.RightArm = BuildBox(rArm.TexOrigin(32, 48));
 			
 			Set64.TorsoLayer = BuildBox(torso.TexOrigin(16, 32).Expand(offset));
 			Set64.LeftLegLayer = BuildBox(lLeg.TexOrigin(0, 48).Expand(offset));
@@ -106,7 +106,7 @@ namespace ClassicalSharp.Model {
 			DrawRotate(p.anim.leftLegX, 0, p.anim.leftLegZ, model.LeftLeg, false);
 			DrawRotate(p.anim.rightLegX, 0, p.anim.rightLegZ, model.RightLeg, false);
 			Rotate = RotateOrder.XZY;
-			DrawRotate(p.anim.leftArmX, 0, p.anim.leftArmZ, model.LeftArm, false);
+			DrawRotate(p.anim.leftArmX, 0, p.anim.leftArmZ, model.LeftArm, false, true);
 			DrawRotate(p.anim.rightArmX, 0, p.anim.rightArmZ, model.RightArm, false);
 			Rotate = RotateOrder.ZYX;
 			UpdateVB();

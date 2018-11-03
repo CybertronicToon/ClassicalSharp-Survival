@@ -257,7 +257,7 @@ namespace ClassicalSharp {
 							counts[index] = 0;
 						} else {
 							int count = StretchZ(index, x, y, z, cIndex, b, Side.Left);
-							AddVertices(b, Side.Left); counts[index] = (byte)count;
+							AddVertices(b, Side.Left);/*AddVertices(b, Side.Left);*/ counts[index] = (byte)count;
 						}
 						
 						index++;

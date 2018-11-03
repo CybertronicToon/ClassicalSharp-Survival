@@ -126,18 +126,18 @@ namespace ClassicalSharp.Renderers {
 			MakeTexture(ref sideTexId, ref lastSideTexLoc, map.Env.SidesBlock);
 		}
 
-		void ResetSidesAndEdges(object sender, EventArgs e) {
+		public void ResetSidesAndEdges(object sender, EventArgs e) {
 			CalculateRects((int)game.ViewDistance);
 			ContextRecreated();
 		}
 		
-		void ResetSides() {
+		public void ResetSides() {
 			if (!game.World.HasBlocks || game.Graphics.LostContext) return;
 			game.Graphics.DeleteVb(ref sidesVb);
 			RebuildSides(map.Env.SidesHeight, legacy ? 128 : 65536);
 		}
 		
-		void ResetEdges() {
+		public void ResetEdges() {
 			if (!game.World.HasBlocks || game.Graphics.LostContext) return;
 			game.Graphics.DeleteVb(ref edgesVb);
 			RebuildEdges(map.Env.EdgeHeight, legacy ? 128 : 65536);
@@ -211,7 +211,8 @@ namespace ClassicalSharp.Renderers {
 			int index = 0;
 			
 			fullBrightEdge = BlockInfo.FullBright[block];
-			int col = fullBrightEdge ? FastColour.WhitePacked : map.Env.Sun;
+			int sunLight = game.Lighting.GetSunLight(map);
+			int col = fullBrightEdge ? FastColour.WhitePacked : sunLight;
 			if (BlockInfo.Tinted[block]) {
 				col = Utils.Tint(col, BlockInfo.FogColour[block]);
 			}

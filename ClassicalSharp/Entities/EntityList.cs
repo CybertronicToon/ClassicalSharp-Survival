@@ -193,7 +193,7 @@ namespace ClassicalSharp.Entities {
 			gfx.AlphaBlending = true;
 			gfx.Texturing = true;
 			
-			gfx.SetBatchFormat(VertexFormat.P3fT2fC4b);
+			gfx.SetBatchFormat(VertexFormat.P3fT2fC4bN1v);
 			ShadowComponent.Draw(game, List[SelfID]);
 			if (ShadowMode == EntityShadow.CircleAll) {
 				for (int i = 0; i < SelfID; i++) {

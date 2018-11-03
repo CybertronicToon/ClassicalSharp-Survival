@@ -15,6 +15,7 @@ namespace ClassicalSharp.Generator {
 		BlockRaw[] blocks;
 		short[] heightmap;
 		short[] heightmapChunk;
+		short[] heightmapMin;
 		JavaRandom rnd, rnd2, rnd3;
 		int minHeight;
 		long chunkSeed, chunkXMul, chunkZMul;
@@ -75,6 +76,15 @@ namespace ClassicalSharp.Generator {
 			
 			CreateChunkHeightmap(chunkX, chunkZ, n1, n2, n3);
 			
+			OctaveNoise n4 = new OctaveNoise(8, rnd);
+			
+			CreateChunkStrata(chunkX, chunkZ, n4);
+			
+			OctaveNoise n5 = new OctaveNoise(8, rnd);
+			OctaveNoise n6 = new OctaveNoise(8, rnd);
+			
+			CreateChunkSurfaceLayer(chunkX, chunkZ, n5, n6);
+			
 		}
 		
 		void CreateChunkHeightmap(int chunkX, int chunkZ, CombinedNoise n1, CombinedNoise n2, OctaveNoise n3) {
@@ -112,6 +122,97 @@ namespace ClassicalSharp.Generator {
 				}
 			}
 			//heightmap = hMap;
+		}
+		
+		void CreateChunkStrata(int chunkX, int chunkZ, OctaveNoise n) {
+			CurrentState = "Creating strata";			
+			int hMapIndex = 0, maxY = Height - 1, mapIndex = 0;
+			// Try to bulk fill bottom of the map if possible
+			int minStoneY = CreateChunkStrataFast(chunkX, chunkZ);
+			int offsetX = (chunkX * 16);
+			int offsetZ = (chunkZ * 16);
+
+			for (int z = 0; z < 16; z++) {
+				int zCur = z + offsetZ;
+				CurrentProgress = (float)z / Length;
+				for (int x = 0; x < 16; x++) {
+					int xCur = x + offsetX;
+					int index = zCur * Width + xCur;
+					int dirtThickness = (int)(n.Compute(x, z) / 24 - 4);
+					int dirtHeight = heightmap[index];
+					int stoneHeight = dirtHeight + dirtThickness;	
+					
+					stoneHeight = Math.Min(stoneHeight, maxY);
+					dirtHeight  = Math.Min(dirtHeight,  maxY);
+					
+					mapIndex = minStoneY * oneY + zCur * Width + xCur;
+					for (int y = minStoneY; y <= stoneHeight; y++) {
+						blocks[mapIndex] = Block.Stone; mapIndex += oneY;
+					}
+					
+					stoneHeight = Math.Max(stoneHeight, 0);
+					mapIndex = (stoneHeight + 1) * oneY + zCur * Width + xCur;
+					for (int y = stoneHeight + 1; y <= dirtHeight; y++) {
+						blocks[mapIndex] = Block.Dirt; mapIndex += oneY;
+					}
+				}
+			}
+		}
+		
+		int CreateChunkStrataFast(int chunkX, int chunkZ) {
+			// Make lava layer at bottom
+			int index = 0;
+			int offsetX = (chunkX * 16);
+			int offsetZ = (chunkZ * 16);
+			for (int z = 0; z < 16; z++)
+				for (int x = 0; x < 16; x++)
+			{
+				int xCur = x + offsetX;
+				int zCur = z + offsetZ;
+				index = zCur * Width + xCur;
+				blocks[index] = Block.Lava;
+			}
+			
+			// Invariant: the lowest value dirtThickness can possible be is -14
+			int stoneHeight = minHeight - 14;
+			if (stoneHeight <= 0) return 1; // no layer is fully stone
+			
+			// We can quickly fill in bottom solid layers
+			for (int y = 1; y <= stoneHeight; y++)
+				for (int z = 0; z < 16; z++)
+					for (int x = 0; x < 16; x++)
+			{
+				int xCur = x + offsetX;
+				int zCur = z + offsetZ;
+				index = (y * Length + zCur) * Width + xCur;
+				blocks[index] = Block.Stone;
+			}
+			return stoneHeight;
+		}
+		
+		void CreateChunkSurfaceLayer(int chunkX, int chunkZ, OctaveNoise n1, OctaveNoise n2) {
+			CurrentState = "Creating surface";
+			// TODO: update heightmap
+			int offsetX = (chunkX * 16);
+			int offsetZ = (chunkZ * 16);
+			for (int z = 0; z < 16; z++) {
+				int zCur = z + offsetZ;
+				CurrentProgress = (float)z / Length;
+				for (int x = 0; x < 16; x++) {
+					int xCur = x + offsetX;
+					int hMapIndex = zCur * Width + xCur;
+					int y = heightmap[hMapIndex];
+					if (y < 0 || y >= Height) continue;
+					
+					int index = (y * Length + zCur) * Width + xCur;
+					BlockRaw blockAbove = y >= (Height - 1) ? Block.Air : blocks[index + oneY];
+					if (blockAbove == Block.Water && (n2.Compute(xCur, zCur) > 12)) {
+						blocks[index] = Block.Gravel;
+					} else if (blockAbove == Block.Air) {
+						blocks[index] = (y <= waterLevel && (n1.Compute(xCur, zCur) > 8)) ? Block.Sand : Block.Grass;
+					}
+				}
+			}
 		}
 		
 		/* ========================= */
@@ -186,6 +287,7 @@ namespace ClassicalSharp.Generator {
 			int hMapIndex = 0, maxY = Height - 1, mapIndex = 0;
 			// Try to bulk fill bottom of the map if possible
 			int minStoneY = CreateStrataFast();
+			heightmapMin = new short[Width * Length];
 
 			for (int z = 0; z < Length; z++) {
 				CurrentProgress = (float)z / Length;
@@ -200,6 +302,11 @@ namespace ClassicalSharp.Generator {
 					mapIndex = minStoneY * oneY + z * Width + x;
 					for (int y = minStoneY; y <= stoneHeight; y++) {
 						blocks[mapIndex] = Block.Stone; mapIndex += oneY;
+					}
+					
+					heightmapMin[hMapIndex - 1] = (short)(stoneHeight + 1);
+					if (heightmapMin[hMapIndex - 1] > heightmap[hMapIndex - 1]) {
+						heightmapMin[hMapIndex - 1] = heightmap[hMapIndex - 1];
 					}
 					
 					stoneHeight = Math.Max(stoneHeight, 0);
@@ -427,15 +534,22 @@ namespace ClassicalSharp.Generator {
 			for (int z = 0; z < Length; z++) {
 				CurrentProgress = (float)z / Length;
 				for (int x = 0; x < Width; x++) {
-					int y = heightmap[hMapIndex++];
-					if (y < 0 || y >= Height) continue;
-					
-					int index = (y * Length + z) * Width + x;
-					BlockRaw blockAbove = y >= (Height - 1) ? Block.Air : blocks[index + oneY];
-					if (blockAbove == Block.Water && (n2.Compute(x, z) > 12)) {
-						blocks[index] = Block.Gravel;
-					} else if (blockAbove == Block.Air) {
-						blocks[index] = (y <= waterLevel && (n1.Compute(x, z) > 8)) ? Block.Sand : Block.Grass;
+					int yMax = heightmap[hMapIndex++];
+					int yMin = heightmapMin[hMapIndex - 1];
+					if (yMax < 0 || yMax >= Height) continue;
+					if (yMin >= Height - 1) continue;
+					if (yMin < 0) yMin = 0;
+					for (int y = yMin; y <= yMax; y++) {
+						
+						int index = (y * Length + z) * Width + x;
+						if (blocks[index] == Block.Air ||
+						    blocks[index] == Block.Water || blocks[index] == Block.Lava) continue;
+						BlockRaw blockAbove = y >= (Height - 1) ? Block.Air : blocks[index + oneY];
+						if (blockAbove == Block.Water && (n2.Compute(x, z) > 12)) {
+							blocks[index] = Block.Gravel;
+						} else if (blockAbove == Block.Air) {
+							blocks[index] = (y <= waterLevel && (n1.Compute(x, z) > 8)) ? Block.Sand : Block.Grass;
+						}
 					}
 				}
 			}

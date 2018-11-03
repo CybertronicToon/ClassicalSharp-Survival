@@ -31,8 +31,11 @@ namespace ClassicalSharp.Generator {
 				double dx = xx - x, dy = yy - y, dz = zz - z;
 				if ((Math.Pow(dx, 2) + 2 * Math.Pow(dy, 2) + Math.Pow(dz, 2)) < radiusSq) {
 					int index = (yy * Length + zz) * Width + xx;
-					if (blocks[index] == Block.Stone)
+					if (blocks[index] == Block.Stone) {
 						blocks[index] = block;
+					} else if (block == Block.Air && (blocks[index] == Block.Dirt || blocks[index] == Block.Grass)) {
+						blocks[index] = block;
+					}
 				}
 			}
 		}

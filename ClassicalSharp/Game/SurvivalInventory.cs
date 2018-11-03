@@ -145,14 +145,21 @@ namespace ClassicalSharp {
 		public Item(sbyte c, byte s, BlockID id) {
 			this.id = id;
 			Count = c;
-			//Slot = s;
+			isBlock = true;
+		}
+		public Item(sbyte c, byte s, BlockID id, bool isBlock) {
+			this.id = id;
+			Count = c;
+			isBlock = isBlock;
 		}
 		public Item(Item item) {
 			this.id = item.id;
 			this.Count = item.Count;
+			this.isBlock = item.isBlock;
 		}
 		public sbyte Count;
 		//public byte Slot;
 		public BlockID id;
+		public bool isBlock;
 	}
 }

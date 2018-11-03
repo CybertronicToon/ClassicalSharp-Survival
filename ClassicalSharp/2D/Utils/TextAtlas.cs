@@ -11,6 +11,8 @@ namespace ClassicalSharp {
 		int[] widths;
 		internal int offset, curX, totalWidth, fontSize;
 		
+		public FastColour Colour = FastColour.White;
+		
 		public TextAtlas(Game game, int fontSize) {
 			this.game = game;
 			this.fontSize = fontSize;
@@ -49,7 +51,7 @@ namespace ClassicalSharp {
 		public void Dispose() { game.Graphics.DeleteTexture(ref tex); }
 		
 		
-		public void Add(int charIndex, VertexP3fT2fC4b[] vertices, ref int index) {
+		public void Add(int charIndex, VertexP3fT2fC4bN1v[] vertices, ref int index) {
 			int width = widths[charIndex];			
 			Texture part = tex;
 			part.X1 = curX; part.Width = (ushort)width;
@@ -57,11 +59,11 @@ namespace ClassicalSharp {
 			part.U2 = part.U1 + width / (float)totalWidth;
 			
 			curX += width;
-			IGraphicsApi.Make2DQuad(ref part, FastColour.WhitePacked, 
+			IGraphicsApi.Make2DQuad(ref part, Colour.Pack(),
 			                        vertices, ref index);
 		}
 		
-		public unsafe void AddInt(int value, VertexP3fT2fC4b[] vertices, ref int index) {
+		public unsafe void AddInt(int value, VertexP3fT2fC4bN1v[] vertices, ref int index) {
 			if (value < 0) Add(10, vertices, ref index); // - sign
 
 			byte* digits = stackalloc byte[32];

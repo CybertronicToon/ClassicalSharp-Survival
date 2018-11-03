@@ -1,5 +1,6 @@
 ﻿// Copyright 2014-2017 ClassicalSharp | Licensed under BSD-3
 using System;
+using OpenTK;
 using ClassicalSharp.GraphicsAPI;
 
 namespace ClassicalSharp.Model {
@@ -20,10 +21,21 @@ namespace ClassicalSharp.Model {
 	public struct ModelVertex {
 		public float X, Y, Z;
 		public ushort U, V;
+		public Vector3 D;
+		public bool N;
 		
 		public ModelVertex(float x, float y, float z, int u, int v) {
 			X = x; Y = y; Z = z;
 			U = (ushort)u; V = (ushort)v;
+			D = new Vector3(0, 0, 1);
+			N = false;
+		}
+		
+		public ModelVertex(float x, float y, float z, int u, int v, Vector3 d) {
+			X = x; Y = y; Z = z;
+			U = (ushort)u; V = (ushort)v;
+			D = d;
+			N = false;
 		}
 	}
 }

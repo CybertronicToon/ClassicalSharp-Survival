@@ -75,6 +75,9 @@ namespace ClassicalSharp.Singleplayer {
 			if (Disconnected) return;
 			// Network ticked 60 times a second, only do physics 20 times a second
 			if ((netTicks % 3) == 0) {
+				if (DoDayNightCycle) {
+					Ticks++;
+				}
 				physics.Tick();
 				game.Mode.Tick();
 				CheckAsyncResources();
